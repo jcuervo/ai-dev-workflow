@@ -10,9 +10,9 @@ A personal toolkit of Claude Code slash commands, agents, hooks and templates fo
 | `docs/commands-inventory.md` | Every command, agent, hook and template — purpose, inputs, outputs, status |
 | `.claude/commands/` | Slash command files |
 | `.claude/agents/` | Subagent definitions, e.g. reviewer, repo explorer |
-| `hooks/` | Hook scripts and settings snippets *(to be built)* |
+| `hooks/` | Hook scripts, settings snippet and installer (see `hooks/README.md`) |
 | `templates/` | Ticket, analysis, open questions, plan, e2e plan, task list and PR description templates |
-| `CHANGELOG.md` | What changed in the kit and why *(to be added)* |
+| `CHANGELOG.md` | What changed in the kit and why |
 
 ## Principles
 
@@ -57,6 +57,13 @@ To uninstall, remove only the symlinks that point here:
 find ~/.claude/commands ~/.claude/agents -lname "$HOME/dev-utilities/ai-dev-workflow/*" -print -delete
 ```
 
+Install the hooks (needs `jq`):
+
+```bash
+hooks/install.sh             # merges into ~/.claude/settings.json; safe to re-run
+hooks/install.sh --uninstall # removes only these hooks
+```
+
 Packaging as a plugin is still an option for later (decision D1 in `docs/workflow.md`).
 
 ## Quick reference
@@ -84,6 +91,8 @@ At the approval step of `/build-task`, reply with:
 After each task: `/clear`, then `/build-task next`.
 
 **Agents:** `task-reviewer` (fresh-context, read-only reviewer) and `repo-explorer` (read-only, one per repo in parallel, returns a summary).
+
+**Hooks:** protected files, RuboCop on edit, specs and security checks before `git commit`. Details in [`hooks/README.md`](hooks/README.md).
 
 **Templates** (copy into a ticket folder): `ticket.md`, `open-questions.md`, `analysis.md`, `plan.md`, `e2e-plan.md`, `test-plan-jira.md`, `tasks.md`, `pr-description.md`.
 

@@ -1,0 +1,27 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          { "type": "command", "command": "\"${AWF_KIT:-$HOME/dev-utilities/ai-dev-workflow}/hooks/protected-files.sh\"", "timeout": 10 }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "\"${AWF_KIT:-$HOME/dev-utilities/ai-dev-workflow}/hooks/specs-before-commit.sh\"", "timeout": 600 },
+          { "type": "command", "command": "\"${AWF_KIT:-$HOME/dev-utilities/ai-dev-workflow}/hooks/security-before-commit.sh\"", "timeout": 300 }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "\"${AWF_KIT:-$HOME/dev-utilities/ai-dev-workflow}/hooks/rubocop-on-edit.sh\"", "timeout": 60 }
+        ]
+      }
+    ]
+  }
+}

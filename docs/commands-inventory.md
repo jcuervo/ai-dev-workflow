@@ -56,10 +56,10 @@ Priority: **P1** build first (core loop) · **P2** next · **P3** later or nice-
 
 | Hook | Trigger | Action | Priority | Status |
 |---|---|---|---|---|
-| Lint & format | After edits / before stop | RuboCop (autocorrect safe cops) on changed files | P1 | planned |
-| Tests gate | Before commit / stop | Run related specs and block on failure | P1 | planned |
-| Security scan | Before commit | Brakeman, bundler-audit | P2 | planned |
-| Protected files | Before edit | Block edits to secrets, credentials, `schema.rb` hand-edits, etc. | P2 | planned |
+| Lint & format (`rubocop-on-edit.sh`) | After each edit | RuboCop on the edited Ruby file; offenses fed back to Claude. Autocorrect opt-in | P1 | drafting |
+| Tests gate (`specs-before-commit.sh`) | Before `git commit` | Run specs related to changed files; block on failure | P1 | drafting |
+| Security scan (`security-before-commit.sh`) | Before `git commit` | Brakeman (warnings in changed files only), bundler-audit when `Gemfile.lock` changed | P2 | drafting |
+| Protected files (`protected-files.sh`) | Before edit | Deny edits to secrets and generated files (`protected-paths.txt`), with what to do instead | P2 | drafting |
 
 ## Templates
 
