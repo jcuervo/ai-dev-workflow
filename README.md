@@ -7,6 +7,7 @@ A personal toolkit of Claude Code slash commands, agents, hooks and templates fo
 | Path | Purpose |
 |---|---|
 | `docs/setup-and-next-steps.md` | **Start here.** Install checklist per machine, things to remember, first-use validation, what's left to build |
+| `examples/dry-run.md` | Rehearsal of the full workflow on the sample todo app, with what to check at each step |
 | `docs/workflow.md` | The working procedure: phases, gates, artifacts, conventions |
 | `docs/commands-inventory.md` | Every command, agent, hook and template — purpose, inputs, outputs, status |
 | `.claude/commands/` | Slash command files |

@@ -26,13 +26,17 @@ Write `ticket.md` from `$AWF_KIT/templates/ticket.md`:
 
 Ask me which repos are affected, including the Playwright repo if e2e tests apply, and where each lives locally. Then propose:
 - **Branch name:** `<KEY>-<short-description>`, lowercase with hyphens, the same in every repo. Derive the description from the ticket title if I didn't give one.
-- **Base:** each repo's default branch (`git -C <repo> symbolic-ref refs/remotes/origin/HEAD`)
+- **Base:** each repo's default branch.
+  - With a remote: `git -C <repo> symbolic-ref refs/remotes/origin/HEAD`, and base the branch on `origin/<default>`.
+  - **No remote** (`git -C <repo> remote` prints nothing): use the local default branch (`main`, else `master`), and skip the fetch.
+  - If the repo has **no commits yet**, stop and tell me; a worktree needs a commit to branch from.
 
 Show the plan and **wait for approval**. Then, for each repo:
 ```bash
-git -C <repo path> fetch origin
-git -C <repo path> worktree add <ticket folder>/repos/<repo name> -b <branch> origin/<default branch>
+git -C <repo path> fetch origin                     # only if the repo has a remote
+git -C <repo path> worktree add <ticket folder>/repos/<repo name> -b <branch> <base>
 ```
+`<base>` is `origin/<default>` with a remote, or the local default branch without one.
 If the branch already exists, use it instead of creating it, and tell me.
 
 Fill in the **Affected repos** table in `ticket.md`.

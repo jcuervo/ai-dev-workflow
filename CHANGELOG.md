@@ -3,6 +3,8 @@
 What changed in the kit and why. Newest first.
 
 ## 2026-10-10
+- **Dry run:** `examples/dry-run.md` and the `TODO-1` sample ticket, against `~/dev-utilities/sample-app` (todo-list + todo-e2e).
+- **Fix:** `/ticket-init` now handles repos with no remote (found while preparing the dry run).
 - **Docs:** `docs/setup-and-next-steps.md`: install checklist, things to remember, first-use validation, remaining work.
 - **Hooks:** protected files, RuboCop on edit, specs and security gates before `git commit`, with an installer that merges into `~/.claude/settings.json`. The tests gate runs on commit rather than on Stop, to avoid slowing down or looping on ordinary replies.
 - **Commands:** `/ticket-init`, `/analyze-ticket`, `/update-analysis`, `/plan-ticket`, `/pr-describe`, `/resolve-review`, plus the `repo-explorer` agent.

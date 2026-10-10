@@ -73,7 +73,7 @@ export AWF_TICKETS_ROOT="$HOME/work/tickets"
 
 ## 3. First real use (to validate drafts)
 
-Everything is **drafting** until it has been used on real work. Suggested order:
+Everything is **drafting** until it has been used on real work. Rehearse first with [`examples/dry-run.md`](../examples/dry-run.md) if you like, then:
 
 - [ ] **Hooks:** make one edit and one commit in a real Rails repo. Check RuboCop feedback appears and the specs gate runs the right specs.
 - [ ] **`/pr-describe`:** on your next PR. Check the template, real test results and related PRs.
