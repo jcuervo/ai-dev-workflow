@@ -6,6 +6,7 @@ A personal toolkit of Claude Code slash commands, agents, hooks and templates fo
 
 | Path | Purpose |
 |---|---|
+| `docs/setup-and-next-steps.md` | **Start here.** Install checklist per machine, things to remember, first-use validation, what's left to build |
 | `docs/workflow.md` | The working procedure: phases, gates, artifacts, conventions |
 | `docs/commands-inventory.md` | Every command, agent, hook and template — purpose, inputs, outputs, status |
 | `.claude/commands/` | Slash command files |
@@ -28,6 +29,8 @@ A personal toolkit of Claude Code slash commands, agents, hooks and templates fo
 This repo holds **tooling only**. Ticket content, analysis documents and client code stay in the local ticket workspace (see `docs/workflow.md` → Folder layout) and are never committed here.
 
 ## Installing
+
+The full per-machine checklist, including the work machine, is in [`docs/setup-and-next-steps.md`](docs/setup-and-next-steps.md).
 
 Symlink the commands and agents into your personal Claude config. They then work in any Claude Code session, and edits in this repo take effect immediately.
 

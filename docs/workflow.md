@@ -242,7 +242,7 @@ Tracked per ticket in `retro.md`, plus a rolling log in this repo (`metrics.md`,
 
 | # | Decision | Options | Status |
 |---|---|---|---|
-| D1 | Packaging the kit | Copy into `~/.claude/` · symlink · plugin | open |
+| D1 | Packaging the kit | Copy into `~/.claude/` · symlink · plugin | **symlinks for now** |
 | D2 | Jira access | Atlassian MCP connector · paste in | open |
 | D3 | Ticket workspace location | `~/work/tickets/` · elsewhere | open |
 | D4 | Autonomy for trivial tasks | Always stop at G4 · allow chaining for flagged-trivial tasks | open |
