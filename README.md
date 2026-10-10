@@ -38,6 +38,13 @@ ln -sf "$PWD"/.claude/commands/*.md ~/.claude/commands/
 ln -sf "$PWD"/.claude/agents/*.md ~/.claude/agents/
 ```
 
+Then tell the commands where the kit lives by adding these lines to `~/.zshrc`:
+
+```bash
+export AWF_KIT="$HOME/dev-utilities/ai-dev-workflow"
+export AWF_TICKETS_ROOT="$HOME/work/tickets"   # where ticket folders are created
+```
+
 Re-run the two `ln` lines whenever a new command or agent file is added. Check with:
 
 ```bash
@@ -56,12 +63,18 @@ Packaging as a plugin is still an option for later (decision D1 in `docs/workflo
 
 Run commands from the **ticket folder root** (e.g. `~/work/tickets/PROJ-123/`), with repo worktrees under `repos/`. Full procedure: [`docs/workflow.md`](docs/workflow.md).
 
-| Command | What it does | Status |
-|---|---|---|
-| `/build-task [T# \| next]` | Builds one task (app or Playwright): specs first, implement, verify, independent review, then stops for your approval before committing | drafting |
-| `/review-task [T#]` | Independent read-only review of one task's changes | drafting |
-| `/e2e-plan [coverage notes]` | Writes the Playwright test plan and adds e2e tasks to `tasks.md`; you decide coverage | drafting |
-| `/jira-test-plan [draft \| evidence]` | Stakeholder test plan for the Jira comment, sanitized; `evidence` captures one screenshot per test item | drafting |
+| Phase | Command | What it does | Status |
+|---|---|---|---|
+| Setup | `/ticket-init <KEY> [desc]` | Creates the ticket folder, `ticket.md` with numbered ACs, and a branch and worktree in every affected repo | drafting |
+| Analysis | `/analyze-ticket [notes]` | Parallel repo exploration, then `analysis.md`, `open-questions.md` and a paste-ready question list for Jira | drafting |
+| Clarify | `/update-analysis` | Applies the BA/PO's answers as a delta, logged in the change log | drafting |
+| Plan | `/plan-ticket [notes]` | Proposes the plan and task breakdown in chat, then writes `plan.md` and `tasks.md` on approval | drafting |
+| Plan | `/e2e-plan [coverage notes]` | Writes the Playwright test plan with TP IDs and adds e2e tasks to `tasks.md`; you decide coverage | drafting |
+| Build | `/build-task [T# \| next]` | Builds one task (app or Playwright): specs first, implement, verify, independent review, then stops for your approval before committing | drafting |
+| Build | `/review-task [T#]` | Independent read-only review of one task's changes | drafting |
+| Evidence | `/jira-test-plan [draft \| evidence]` | Stakeholder test plan for the Jira comment, sanitized; `evidence` captures one screenshot per test item | drafting |
+| Ship | `/pr-describe [repo\|PR] [--refresh]` | Writes the PR title and description with real test results; `--refresh` updates only what changed | drafting |
+| Review | `/resolve-review [PR]` | Triage, fix, verify, push, reply, then refresh the description, with approval at each gate | drafting |
 
 At the approval step of `/build-task`, reply with:
 - `approve`: commit this task's files
@@ -70,7 +83,7 @@ At the approval step of `/build-task`, reply with:
 
 After each task: `/clear`, then `/build-task next`.
 
-**Agents:** `task-reviewer`, a fresh-context, read-only reviewer used by both commands.
+**Agents:** `task-reviewer` (fresh-context, read-only reviewer) and `repo-explorer` (read-only, one per repo in parallel, returns a summary).
 
 **Templates** (copy into a ticket folder): `ticket.md`, `open-questions.md`, `analysis.md`, `plan.md`, `e2e-plan.md`, `test-plan-jira.md`, `tasks.md`, `pr-description.md`.
 

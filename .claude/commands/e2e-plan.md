@@ -30,7 +30,7 @@ Apply my coverage notes first. Don't add scenarios I've excluded.
 
 ## Step 3 — Write `e2e-plan.md`
 
-Use `templates/e2e-plan.md` from the ai-dev-workflow kit (`~/.claude/` symlinks point to it; ask me for the path if you can't find it). Fill in:
+Use `$AWF_KIT/templates/e2e-plan.md`. Fill in:
 
 1. **Coverage decision** table, every AC listed
 2. **Environment and data:** the target is the **local stack** running the ticket branches. Include the base URL and how to start it, from the Playwright repo's `CLAUDE.md`. Also list flags, users and roles, seed data, and cleanup.

@@ -9,15 +9,15 @@ Priority: **P1** build first (core loop) · **P2** next · **P3** later or nice-
 
 | Command | Purpose | Inputs | Outputs | Priority | Status |
 |---|---|---|---|---|---|
-| `/ticket-init <KEY>` | Create the ticket folder. Pull the ticket from Jira (MCP), or take it pasted. Record affected repos and create branches/worktrees. | Jira key or pasted ticket | `ticket.md`, folder skeleton, branches | P1 | planned |
-| `/analyze-ticket` | Full analysis against the Definition of Ready: scope, impacted repos, risks, assumptions, edge cases. Uses parallel explorer agents per repo. | `ticket.md`, repos | `analysis.md`, `open-questions.md` | P1 | planned |
-| `/update-analysis` | Apply BA/PO answers as a **delta**: update only affected sections and log the changes. | `open-questions.md` with answers | Updated `analysis.md`, change log entry | P1 | planned |
+| `/ticket-init <KEY>` | Create the ticket folder. Pull the ticket from Jira (MCP), or take it pasted. Record affected repos and create branches/worktrees. | Jira key or pasted ticket | `ticket.md`, folder skeleton, branches | P1 | drafting |
+| `/analyze-ticket` | Full analysis against the Definition of Ready: scope, impacted repos, risks, assumptions, edge cases. Uses parallel explorer agents per repo. | `ticket.md`, repos | `analysis.md`, `open-questions.md` | P1 | drafting |
+| `/update-analysis` | Apply BA/PO answers as a **delta**: update only affected sections and log the changes. | `open-questions.md` with answers | Updated `analysis.md`, change log entry | P1 | drafting |
 
 ### Phase 2 — Planning
 
 | Command | Purpose | Inputs | Outputs | Priority | Status |
 |---|---|---|---|---|---|
-| `/plan-ticket` | Plan plus task breakdown in one pass: contracts first, deploy order, backward compatibility, flags, migration safety, rollback, AC → task mapping. | `analysis.md` | `plan.md`, `tasks.md` | P1 | planned |
+| `/plan-ticket` | Plan plus task breakdown in one pass: contracts first, deploy order, backward compatibility, flags, migration safety, rollback, AC → task mapping. | `analysis.md` | `plan.md`, `tasks.md` | P1 | drafting |
 | `/e2e-plan` | Write the Playwright test plan from the ACs and approved plan: which ACs get e2e coverage, scenarios, test data, required selectors (fed back into feature tasks), then append `e2e` tasks for the Playwright repo to `tasks.md`. Replaces the manual hand-over doc. Can run right after plan approval, before any code. You decide coverage; notes passed as arguments override its proposal. | `ticket.md`, `plan.md`, Playwright repo `CLAUDE.md` | `e2e-plan.md`, e2e tasks in `tasks.md` | P1 | drafting |
 | `/jira-test-plan [draft\|evidence]` | Generate the **stakeholder** test plan from `e2e-plan.md`: plain language, sanitized of file paths, repo names, task IDs, SHAs and internal URLs (with a mechanical check). `draft` is for early coverage confirmation with the BA/PO. `evidence` runs the e2e specs locally, captures one screenshot per test item into the ticket folder (`<KEY>_TP-01.png`…), and fills in Result and Evidence. | `e2e-plan.md`, `ticket.md`, local stack | `test-plan-jira.md`, `evidence/*.png` | P1 | drafting |
 
@@ -34,13 +34,13 @@ Priority: **P1** build first (core loop) · **P2** next · **P3** later or nice-
 | Command | Purpose | Inputs | Outputs | Priority | Status |
 |---|---|---|---|---|---|
 | `/dod-check` | Definition of Done gate: every AC traced to a passing spec, lint/security clean, docs/changelog, monitoring where relevant. | Ticket folder, repos | Pass/fail checklist | P2 | planned |
-| `/pr-describe [repo] [--refresh]` | Create the PR description from `templates/pr-description.md` (or the repo's own PR template, filled first). Runs specs, RuboCop and Brakeman for the **Test results** section, and records the SHA they're for. `--refresh` regenerates only the sections the latest changes affect, appends a **Revisions** entry, and keeps human edits outside the section markers. Shows the result for approval before updating the PR. | Ticket folder, repo, PR | PR title and body (via `gh pr edit`) | P2 | planned |
+| `/pr-describe [repo] [--refresh]` | Create the PR description from `templates/pr-description.md` (or the repo's own PR template, filled first). Runs specs, RuboCop and Brakeman for the **Test results** section, and records the SHA they're for. `--refresh` regenerates only the sections the latest changes affect, appends a **Revisions** entry, and keeps human edits outside the section markers. Shows the result for approval before updating the PR. | Ticket folder, repo, PR | PR title and body (via `gh pr edit`) | P2 | drafting |
 
 ### Phase 5 — Review & close
 
 | Command | Purpose | Inputs | Outputs | Priority | Status |
 |---|---|---|---|---|---|
-| `/resolve-review [pr]` | Pull unresolved review threads, review summaries and PR comments (including bot reviews) via `gh`. Triage each as fix / discuss / decline with reason, and **wait for approval of the triage**. Fix as small commits, run checks, push on approval, then draft one reply per thread citing the fix SHA and **wait for approval before posting**. Finally, run `/pr-describe --refresh` if the fixes changed what the description says. | PR review threads | Commits, posted replies, refreshed description | P1 | planned |
+| `/resolve-review [pr]` | Pull unresolved review threads, review summaries and PR comments (including bot reviews) via `gh`. Triage each as fix / discuss / decline with reason, and **wait for approval of the triage**. Fix as small commits, run checks, push on approval, then draft one reply per thread citing the fix SHA and **wait for approval before posting**. Finally, run `/pr-describe --refresh` if the fixes changed what the description says. | PR review threads | Commits, posted replies, refreshed description | P1 | drafting |
 | `/capture-learnings` | Turn recurring review findings and surprises into `CLAUDE.md` rules or review-skill references. Proposes diffs for approval. | Review history, ticket notes | Proposed rule changes | P3 | planned |
 | `/ticket-retro` | Record metrics: open questions count, review rounds, cycle time, plan deviations. | Ticket folder, PRs | `retro.md`, metrics log entry | P3 | planned |
 
@@ -49,7 +49,7 @@ Priority: **P1** build first (core loop) · **P2** next · **P3** later or nice-
 | Agent | Purpose | Used by | Priority | Status |
 |---|---|---|---|---|
 | `task-reviewer` | Fresh-context reviewer. Didn't write the code. Uses the org review skill and checks the task's ACs. | `/build-task`, `/review-task` | P1 | drafting |
-| `repo-explorer` | Read-only investigation of one repo; returns a summary, not file dumps. Run one per affected repo in parallel. | `/analyze-ticket`, `/plan-ticket` | P1 | planned |
+| `repo-explorer` | Read-only investigation of one repo; returns a summary, not file dumps. Run one per affected repo in parallel. | `/analyze-ticket`, `/plan-ticket` | P1 | drafting |
 | `contract-checker` | Compares API/event contracts across repos for mismatches and compatibility breaks. | `/plan-ticket`, `/dod-check` | P3 | planned |
 
 ## Hooks

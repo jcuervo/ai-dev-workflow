@@ -23,7 +23,7 @@ If they disagree, fix `e2e-plan.md` and regenerate. Don't hand-edit the Jira ver
 
 ## Step 2 — Write `test-plan-jira.md`
 
-Use the kit's `templates/test-plan-jira.md`. Write for the **BA/PO**:
+Use `$AWF_KIT/templates/test-plan-jira.md`. Write for the **BA/PO**:
 - Describe scenarios and steps in user terms ("Open an order and click Refund"), not test terms ("navigate to /orders/:id, click data-testid refund-btn").
 - Reference ACs with the same numbering and short wording as the Jira ticket.
 - For every AC not tested here, say why in plain language.
