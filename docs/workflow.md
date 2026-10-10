@@ -13,7 +13,7 @@ The working procedure for taking one ticket through Claude Code across one or mo
 | 0 | Setup | `/ticket-init` | `ticket.md`, branches | — |
 | 1 | Analysis | `/analyze-ticket` | `analysis.md`, `open-questions.md` | **G1** BA/PO answer questions |
 | 2 | Clarify | `/update-analysis` | updated `analysis.md` | **G2** Definition of Ready met |
-| 3 | Plan | `/plan-ticket` | `plan.md`, `tasks.md` | **G3** You approve plan |
+| 3 | Plan | `/plan-ticket`, `/e2e-plan` | `plan.md`, `e2e-plan.md`, `tasks.md` | **G3** You approve plan and e2e plan |
 | 4 | Build | `/build-task next` (repeat) | commits, `tasks.md` status | **G4** You approve each task commit |
 | 5 | Ship | `/dod-check`, `/pr-describe` | PRs per repo | **G5** Definition of Done met |
 | 6 | Review | `/resolve-review` | fix commits, replies | **G6** Reviewers approve |
@@ -31,12 +31,16 @@ The ticket workspace lives **outside** this repo and outside the service repos, 
 ├── analysis.md          # current analysis (versioned via change log section)
 ├── open-questions.md    # Q&A with BA/PO, answered inline
 ├── plan.md              # approved plan
+├── e2e-plan.md          # internal Playwright test plan (replaces the hand-over doc)
+├── test-plan-jira.md    # stakeholder test plan, posted to Jira as a comment
+├── evidence/            # screenshots per test item: PROJ-123_TP-01.png…
 ├── tasks.md             # task list — source of truth during build
 ├── notes.md             # decisions, deviations, surprises (append-only)
 ├── retro.md             # metrics and learnings at close
 └── repos/               # git worktrees, one per affected repo
     ├── billing-service/
-    └── orders-service/
+    ├── orders-service/
+    └── e2e-tests/       # the Playwright repo, same branch name
 ```
 
 - Branch naming: `PROJ-123-short-description`, the same name in every affected repo.
@@ -86,7 +90,11 @@ The ticket workspace lives **outside** this repo and outside the service repos, 
    - **Rollback plan.**
    - **AC → task mapping:** every AC is covered by at least one task.
 
-**Gate G3:** you review and approve. Edit the files directly if needed. Approved plans are not re-generated; changes go through `notes.md`.
+3. Run `/e2e-plan`. It decides which ACs need Playwright coverage, writes the scenarios, and lists the selectors and seed data the app must provide. It then appends `e2e` tasks for the Playwright repo to `tasks.md`.
+   - Selectors are agreed **before** coding, so the feature tasks add them and the e2e tests don't depend on fragile DOM paths.
+   - The Playwright repo is treated as one more affected repo: same branch name, its own worktree under `repos/`.
+
+**Gate G3:** you review and approve the plan and the e2e plan. Edit the files directly if needed. Approved plans are not re-generated; changes go through `notes.md`.
 
 ### Task format (`tasks.md`)
 
@@ -127,6 +135,25 @@ What `/build-task` does:
 7. Hands you a summary: diff overview, review findings, deviations from plan.
 8. **Gate G4:** on your approval, commits only this task's changes, marks it `done` and stops.
 
+E2E tasks run through the same loop, in the Playwright repo:
+- The deliverable is the Playwright spec; there's no separate "failing spec first" step.
+- The Playwright repo's own `CLAUDE.md` and guidelines govern structure and conventions.
+- Verification is a **local** run against the stack on the ticket branches, run twice to catch flakiness. If the stack can't run, the minimum is `npx playwright test --list` plus a type check, and the task stays open until the tests have run.
+- **Failure triage:** a failure is either a test bug (fix the test), an app bug from this ticket (goes back to its feature task), or possibly pre-existing. For the last, re-run the spec with the stack on `main`. If it fails there too, it's recorded in `notes.md`, marked per the repo's guidelines, and raised as a separate ticket rather than fixed here.
+- You decide coverage. `/e2e-plan` proposes it, and your coverage notes override its judgment.
+
+### Jira test plan and evidence
+
+There's one source and two outputs. `e2e-plan.md` is the internal plan. `test-plan-jira.md` is generated from it for the BA/PO and posted to the ticket as a comment.
+
+- **Test items have stable IDs** (TP-01, TP-02…), assigned in `e2e-plan.md`, including manual items with no automation. IDs are never renumbered.
+- **`/jira-test-plan draft`** can go to the BA/PO as soon as the e2e plan is approved, to confirm coverage before the tests are written.
+- **`/jira-test-plan evidence`** runs the e2e specs locally and captures one screenshot per test item at its evidence point. It fills in Result and Evidence. Screenshots are named `<KEY>_TP-NN.png`, so attaching them in Jira is a straight match against the Evidence column.
+- **Sanitization is checked mechanically:** no file paths, repo or service names, task IDs, SHAs or internal URLs in the posted version.
+- **Screenshots stay in the ticket folder,** never in the Playwright repo, because they can contain client data.
+- How screenshots are captured follows the Playwright repo's conventions. If it has no evidence mechanism, adding one (e.g. env-gated `page.screenshot()` calls) needs your approval, so the shared suite isn't changed silently.
+- E2E tasks depend on the feature tasks they cover, so they're built last. They can also be built earlier against an agreed UI if the selectors are settled.
+
 Conventions:
 - Commit message: `[PROJ-123][T3] Add refund webhook handler`
 - **Push per task to a draft PR** so CI runs early. Don't wait until the end.
@@ -136,7 +163,10 @@ Conventions:
 ## Phase 5 — Ship
 
 1. Run `/dod-check`.
-2. Run `/pr-describe` for each repo, then mark the draft PRs ready for review.
+2. Run `/pr-describe` for each repo. It:
+   - Uses the repo's own `.github/pull_request_template.md` if there is one, then adds any of our sections it lacks
+   - Runs the checks itself for the **Test results** section and records the SHA the results are for
+   - Shows the title and body for your approval, then updates the draft PR and marks it ready for review
 
 **Gate G5 — Definition of Done:**
 - [ ] Every AC traced to a passing spec
@@ -145,18 +175,39 @@ Conventions:
 - [ ] Migrations reviewed for safety
 - [ ] Docs, changelog and README updated where relevant
 - [ ] Logging and monitoring added where relevant
+- [ ] Playwright PR included in the batch, covering every AC marked for e2e, with run results
+- [ ] Jira test plan posted with evidence attached for every test item (`/jira-test-plan evidence`)
 - [ ] Cross-repo PRs link to each other, with deploy order stated
 
-### PR description contents
-Ticket link · short plan summary · AC → spec table · linked PRs in other repos · deploy order · risky areas for reviewers · rollback notes.
+### PR description standard
+Template: [`templates/pr-description.md`](../templates/pr-description.md).
+
+- **Title:** `[KEY] <imperative summary>`, specific enough to stand alone in `git log`. Not "Fix bug" or "Phase 1".
+- **Sections:** Summary (what and why) · Related PRs and deploy order (including the Playwright PR) · Changes · Acceptance criteria → specs and e2e specs · Test results · How to test · Risk and rollout · Notes for reviewers · Revisions. No screenshots by team convention.
+- **Readable without Jira.** Links can rot or be inaccessible to reviewers; the description should carry the essential context itself.
+- **Test results are a snapshot.** Always state the SHA. Put long output in a collapsed `<details>` block; link CI instead of pasting full logs.
+- **Keep it true.** The description must match the code at merge time. That's what the Revisions section and `--refresh` are for.
 
 ## Phase 6 — Review
 
-1. Run `/resolve-review <pr>`. It pulls the comments and triages each: **fix**, **discuss**, or **decline with a reason**.
-2. Fixes go in as small, separate commits.
-3. Claude drafts replies; **you post them**.
+Run `/resolve-review <pr>`, once per review round:
+
+1. **Pull** unresolved review threads, review summaries and general PR comments, including bot or Claude reviews, via `gh`.
+2. **Triage.** Each item becomes a table row: **fix** / **discuss** / **decline (with reason)** / **already addressed**. Related comments are grouped.
+   **Gate:** you approve or adjust the triage before any code changes.
+3. **Fix** each fix item as a small commit in its own repo. Commit message format: `[KEY] Address review: <summary>`.
+4. **Verify:** related specs, RuboCop and Brakeman.
+5. **Push.** **Gate:** you approve the push.
+6. **Draft replies,** one per thread: what changed and the fix SHA, or the reasoning for discuss and decline items.
+   **Gate:** you approve, edit or drop each reply before anything is posted.
+7. **Post** the approved replies to their threads. Threads are **not** resolved by default; the reviewer resolves them (decision D7).
+8. **Refresh the description.** If the fixes changed behaviour, approach, scope, risk or test results, run `/pr-describe --refresh`. It rewrites only the affected sections, updates Test results with the new SHA, and adds a Revisions entry. **Gate:** you approve the updated description.
 
 **Gate G6:** reviewers approve.
+
+Notes:
+- If a review item reveals a gap in the plan, record it in `notes.md`. If it's a recurring kind of finding, tag it for `/capture-learnings`.
+- If the PR spans several repos, run it per PR. Check whether a fix in one repo affects the others' descriptions or deploy order.
 
 ## Phase 7 — Close
 
@@ -197,3 +248,6 @@ Tracked per ticket in `retro.md`, plus a rolling log in this repo (`metrics.md`,
 | D4 | Autonomy for trivial tasks | Always stop at G4 · allow chaining for flagged-trivial tasks | open |
 | D5 | Automated first-pass PR review in CI | GitHub Action · none | open |
 | D6 | Review skill integration | Reference the org skill · vendor a copy | open |
+| D7 | Who resolves review threads | Reviewer (default) · author after reply · configurable per repo | open |
+| D8 | How Playwright runs against a branch | **Local stack only**; `main` used to check whether a failure is pre-existing | decided |
+| D9 | Jira test plan format and posting | Markdown pasted by hand · Jira wiki markup · posted via Atlassian MCP (see D2) | open |
