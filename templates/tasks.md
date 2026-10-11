@@ -12,7 +12,7 @@
 - **Out-of-scope discoveries** become new tasks at the end; they don't get folded into the current task.
 - **E2E tasks** live in the Playwright repo, depend on the feature tasks they cover, and use the scenarios in `e2e-plan.md`.
 - **Every task is reviewed** by the independent `task-reviewer` before its commit; the review is saved to `reviews/T#.md`, and a commit hook enforces it.
-- **Commit format:** `[{{KEY}}][T#] <summary>`
+- **Commit format:** `[{{KEY}}] <summary>` (see `templates/commit-message.md`). The task number isn't in the message; **Commits** below links each task to its SHAs.
 
 ## Summary
 | ID | Title | Repo | Category | Status | Depends on | ACs |

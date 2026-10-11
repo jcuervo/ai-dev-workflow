@@ -1,6 +1,6 @@
 ---
-description: Create or check the ticket's branches across all involved repos (branch or worktree mode), add a repo later, or release the clones when done
-argument-hint: "[setup | add <repo> [role] | status | release]"
+description: Create or check the ticket's branches across all involved repos (branch or worktree mode), add a repo later, bring branches up to date with the default branch, or release the clones when done
+argument-hint: "[setup | add <repo> [role] | status | sync | release]"
 ---
 
 # Ticket repos
@@ -53,6 +53,21 @@ Show a table, one row per repo: role, expected branch, actual branch, clean or d
 - uncommitted changes anywhere
 
 Use this before e2e runs and evidence capture, since the local stack must match the ticket.
+
+## sync
+
+Bring each `change` and `e2e` ticket branch up to date with its default branch, and pull `run` repos to latest. Use it for multi-day tickets, before `/ticket-ship`, or when a reviewer asks for it.
+
+1. Run the safety checks, then fetch. For each repo, show how many commits the ticket branch is behind its default branch, and whether the branch has been pushed.
+2. **Strategy:** use `$AWF_SYNC_STRATEGY` if set (`rebase` or `merge`). Otherwise ask, recommending:
+   - **rebase** for branches not pushed yet, or not yet reviewed (a clean history)
+   - **merge** once a PR is under review (no force-push, and reviewers keep their place)
+3. **Wait for approval**, then per repo: `git rebase origin/<default>` or `git merge origin/<default>` (the local default branch without a remote).
+4. **Conflicts:** stop at the first conflicted repo. Show the conflicted files and what each side changed, and propose a resolution. **Resolve only with my approval**, then continue (`git rebase --continue`, or commit the merge). If it's not clear-cut, `git rebase --abort` / `git merge --abort` and tell me.
+5. After each repo: run its specs for the files the ticket changed, plus the files the default branch changed that overlap them. Report failures; don't fix them here. A fix is a task, or a `/build-task` follow-up.
+6. **Pushing:** a merged branch can be pushed normally once I approve. A rebased branch that was already pushed needs `git push --force-with-lease`. Ask explicitly per repo, and never use a plain `--force`.
+7. `run` repos: `switch <default>` and `pull --ff-only`, as in setup.
+8. Remind me which Docker services changed and may need a restart, migrations or a rebuild. Record the sync in `notes.md` (date, repos, strategy, conflicts).
 
 ## release
 

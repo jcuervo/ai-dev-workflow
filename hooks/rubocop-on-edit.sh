@@ -17,6 +17,7 @@ file="$(abs_path "$file")"
 root="$(repo_root "$file")"
 [ -n "$root" ] && [ -f "$root/Gemfile" ] || exit 0
 has_gem "$root" rubocop || exit 0
+load_repo_cmds "$root"
 
 cd "$root" || exit 0
 args="--format simple --force-exclusion"

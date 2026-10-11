@@ -12,7 +12,7 @@ You investigate **one repository** and report back. You are **read-only**: never
 - Ticket summary and the ACs relevant to this repo, or a specific question
 
 ## How to work
-1. Read the repo's `CLAUDE.md` and README first, for structure and conventions.
+1. Read the repo's instruction files: `CLAUDE.md`, `CLAUDE.local.md`, `.claude/CLAUDE.md`, `.claude/rules/*.md`, and `AGENTS.md` if there's no `CLAUDE.md`, plus the README, for structure and conventions.
 2. Find the affected areas with Grep and Glob: routes, controllers, models, jobs, services, serializers, API clients, event publishers and consumers. Read the parts that matter, not whole directories.
 3. Look at `db/schema.rb` (or `structure.sql`) for the tables involved, and recent migrations touching them.
 4. Look for existing specs covering the area.

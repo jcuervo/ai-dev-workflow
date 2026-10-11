@@ -25,7 +25,7 @@ If you're given a previous review, this is a **verification round**, not a fresh
 
 ## Steps
 
-1. **Understand the intent.** Read the task's section in `tasks.md`, the ACs it lists in `ticket.md`, and the plan section it points to. Read the repo's `CLAUDE.md` if it exists.
+1. **Understand the intent.** Read the task's section in `tasks.md`, the ACs it lists in `ticket.md`, and the plan section it points to. Read the repo's instruction files: `CLAUDE.md`, `CLAUDE.local.md`, `.claude/CLAUDE.md`, `.claude/rules/*.md`, and `AGENTS.md` if there's no `CLAUDE.md`.
 2. **Get the diff.**
    - Uncommitted: `git -C <repo> diff HEAD` and `git -C <repo> status --porcelain` (read untracked files directly)
    - Commits: `git -C <repo> show <sha>` for each

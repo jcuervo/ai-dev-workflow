@@ -9,6 +9,7 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 detect_commit || exit 0
 root="$(repo_root "$COMMIT_DIR")"
 [ -n "$root" ] && [ -f "$root/Gemfile" ] || exit 0
+load_repo_cmds "$root"
 cd "$root" || exit 0
 
 changed="$(changed_files "$root")"

@@ -9,6 +9,8 @@
 #   AWF_TICKETS_ROOT=~/tickets ./install.sh      put ticket folders somewhere else
 #   AWF_REVIEW_MAX_ROUNDS=2 ./install.sh         change the review-loop cap (default 3)
 #   AWF_KEEP_ATTRIBUTION=1 ./install.sh          keep Claude's Co-Authored-By / PR attribution
+#   ./install.sh --uninstall                     remove links, hooks, env settings and shell lines
+#                                                (keeps env.sh, the repo registry and your tickets)
 #
 # Where settings go:
 #   ~/.claude/settings.json  "env"   what Claude Code, its commands and hooks see (any shell, any launcher)
@@ -18,18 +20,58 @@ KIT="$(cd "$(dirname "$0")" && pwd -P)"
 CONF_DIR="$HOME/.config/ai-dev-workflow"
 ENV_FILE="$CONF_DIR/env.sh"
 SETTINGS="$HOME/.claude/settings.json"
-WITH_HOOKS=1
-[ "${1:-}" = "--no-hooks" ] && WITH_HOOKS=0
+WITH_HOOKS=1; UNINSTALL=0
+case "${1:-}" in --no-hooks) WITH_HOOKS=0 ;; --uninstall) UNINSTALL=1 ;; esac
 
 say()  { printf '\033[1m%s\033[0m\n' "$*"; }
 warn() { printf '\033[33m%s\033[0m\n' "$*" >&2; }
-case "$(uname -s)" in Darwin) PKG="brew install" ;; *) PKG="sudo apt install" ;; esac
+
+# Platform
+case "$(uname -s)" in
+  Darwin) PKG="brew install" ;;
+  Linux)  PKG="sudo apt install"
+          if grep -qi microsoft /proc/version 2>/dev/null; then
+            case "$KIT" in /mnt/[a-z]/*) warn "WSL: the kit is on the Windows drive ($KIT). Clone it (and your repos) under your Linux home instead, e.g. ~/dev-utilities, for speed and correct file permissions." ;; esac
+          fi ;;
+  MINGW*|MSYS*|CYGWIN*)
+          warn "Native Windows (Git Bash) isn't supported: the hooks and installer rely on Unix symlinks and tools."
+          warn "Use WSL 2 (Ubuntu): install Claude Code inside WSL and run this installer there. See README → Windows."
+          exit 1 ;;
+  *)      PKG="your package manager: install" ;;
+esac
 command -v jq >/dev/null 2>&1 || { warn "jq is required: $PKG jq"; exit 1; }
+
+# Full uninstall
+if [ "$UNINSTALL" = 1 ]; then
+  say "Uninstalling ai-dev-workflow"
+  for kind in commands agents; do
+    for l in "$HOME/.claude/$kind"/*.md; do
+      [ -L "$l" ] || continue
+      case "$(readlink "$l")" in "$KIT"/*) rm -f "$l"; echo "  removed $kind/$(basename "$l")" ;; esac
+    done
+  done
+  [ -f "$SETTINGS" ] && "$KIT/hooks/install.sh" --uninstall "$SETTINGS"
+  if [ -f "$SETTINGS" ]; then
+    jq 'if .env then .env |= with_entries(select(.key | startswith("AWF_") | not)) | (if (.env|length)==0 then del(.env) else . end) else . end' \
+      "$SETTINGS" > "$SETTINGS.tmp" && mv "$SETTINGS.tmp" "$SETTINGS"
+    echo "  removed AWF_* from $SETTINGS env (attribution setting left as is)"
+  fi
+  for rc in "$HOME/.zshrc" "$HOME/.bashrc"; do
+    [ -f "$rc" ] && grep -q '# >>> ai-dev-workflow >>>' "$rc" || continue
+    tmp="$(mktemp)"; sed '/# >>> ai-dev-workflow >>>/,/# <<< ai-dev-workflow <<</d' "$rc" | cat -s > "$tmp" && cat "$tmp" > "$rc"; rm -f "$tmp"
+    echo "  removed the source line from $rc"
+  done
+  echo "Kept: $CONF_DIR (env.sh, repos.yml) and your ticket folders. Delete them yourself if you want."
+  exit 0
+fi
 
 # 1. Commands and agents (symlinks, so edits in the kit take effect immediately)
 say "Linking commands and agents into ~/.claude"
 for kind in commands agents; do
   mkdir -p "$HOME/.claude/$kind"
+  for l in "$HOME/.claude/$kind"/*.md; do   # prune links to files the kit renamed or removed
+    [ -L "$l" ] && [ ! -e "$l" ] && case "$(readlink "$l")" in "$KIT"/*) rm -f "$l"; echo "  removed stale $kind/$(basename "$l")" ;; esac
+  done
   for f in "$KIT/.claude/$kind"/*.md; do
     [ -e "$f" ] || continue
     dest="$HOME/.claude/$kind/$(basename "$f")"
@@ -129,11 +171,16 @@ fi
 # 6. Checks
 say "Checks"
 echo "  jq: ok"
+hosts=""
 if command -v gh >/dev/null 2>&1; then
-  gh auth status >/dev/null 2>&1 && echo "  gh: ok" || warn "  gh: installed but not logged in (gh auth login)"
-else
-  warn "  gh: missing ($PKG gh). Needed for /pr-describe and /resolve-review"
+  gh auth status >/dev/null 2>&1 && hosts="$hosts gh(GitHub):ok" || hosts="$hosts gh(GitHub):not-logged-in"
 fi
+if command -v glab >/dev/null 2>&1; then
+  glab auth status >/dev/null 2>&1 && hosts="$hosts glab(GitLab):ok" || hosts="$hosts glab(GitLab):not-logged-in"
+fi
+command -v az >/dev/null 2>&1 && hosts="$hosts az(Azure DevOps):installed"
+if [ -n "$hosts" ]; then echo "  code-host CLIs:$hosts"
+else warn "  no code-host CLI found (gh / glab / az). PR commands will use manual mode (files to paste). See docs/code-hosts.md"; fi
 command -v git >/dev/null 2>&1 && echo "  git identity: $(git config --global user.name 2>/dev/null || echo '?') <$(git config --global user.email 2>/dev/null || echo '?')>"
 
 echo

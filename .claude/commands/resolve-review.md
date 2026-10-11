@@ -1,5 +1,5 @@
 ---
-description: Work through a PR's review comments — triage, fix, verify, push, reply and refresh the description, with approval at each gate
+description: Work through a PR/MR's review comments (GitHub, GitLab, Azure DevOps, or pasted) — triage, fix, verify, push, reply and refresh the description, with approval at each gate
 argument-hint: "[PR number | URL]"
 ---
 
@@ -8,6 +8,8 @@ argument-hint: "[PR number | URL]"
 Arguments: `$ARGUMENTS`. A PR number or URL, or empty for the PR on the current branch.
 
 Run this from the repo, or from the ticket folder root (then `cd` into `repos/<repo>` for git work). **Nothing is pushed or posted without my approval.**
+
+**Code host:** detect it from `git remote get-url origin` and use the matching CLI and commands from `$AWF_KIT/docs/code-hosts.md`. The `gh` commands below are the GitHub versions. On GitLab use `glab` and MR discussions; on Azure DevOps use `az repos pr` threads. With no usable CLI, use **manual mode**: I paste the comments, and you write the replies to a file for me to post.
 
 ## Step 1 — Pull everything
 
@@ -53,7 +55,7 @@ For each approved **fix** (or group):
 1. Make the smallest change that addresses it, staying within this PR's scope. If a fix would grow the PR noticeably, stop and suggest a follow-up ticket instead.
 2. Add or adjust specs where behaviour changed.
 3. Commit separately, staging by explicit path (never `git add -A`):
-   `[KEY] Address review: <summary>` (KEY from the branch name or ticket folder). No `Co-Authored-By` or other trailers.
+   `[KEY] Address review: <summary>` (KEY from the branch name or ticket folder), per `$AWF_KIT/templates/commit-message.md`. No `Co-Authored-By` or other trailers.
 4. Note the short SHA against the item.
 
 ## Step 4 — Verify

@@ -28,7 +28,7 @@ Read only:
 - The plan section it points to (not the whole plan, unless the section is unclear without it)
 - The ACs it lists, from `ticket.md`
 - `notes.md` entries mentioning this task ID, if the file exists
-- `repos/<repo>/CLAUDE.md`, if it exists
+- `repos/<repo>/`'s instruction files: `CLAUDE.md`, `CLAUDE.local.md`, `.claude/CLAUDE.md`, `.claude/rules/*.md`, and `AGENTS.md` if there's no `CLAUDE.md`. Below, "the repo's `CLAUDE.md`" means all of these. If there are none, or they have no test commands, say so and suggest `/repo-setup <repo>` before continuing; guessing commands costs more than setting them up once.
 
 Then explore only the code the task touches. If you need a broad search across the repo, use a subagent and ask for a summary.
 
@@ -141,7 +141,7 @@ Checks:      rubocop ✓/✗ · brakeman ✓/✗/n.a.
 Review:      <final verdict> · <rounds> round(s), stopped: <converged | cap | not converging> · fixed: <…> · left: <…> · disputed: <… — your call> · saved: reviews/T#.md
 Deviations:  <from the plan, or "none">
 Follow-ups:  <proposed new tasks, or "none">
-Commit msg:  [<KEY>][T#] <summary>
+Commit msg:  [<KEY>] <imperative summary>   (format: $AWF_KIT/templates/commit-message.md)
 ```
 
 Reply with one of:
@@ -152,8 +152,8 @@ Reply with one of:
 ## Step 8 — On approval
 
 1. Stage **only this task's files** by explicit path. Never use `git add -A` or `git add .`. Confirm with `git status` that nothing unrelated is staged.
-2. Commit with the agreed message **only**: no `Co-Authored-By` or other trailers, no "Generated with" line. The commit is authored by the configured git user.
-3. If I said **approve & push**: push the branch. If there's no PR for this branch yet, create a **draft** PR with `gh pr create --draft` using a minimal placeholder body; `/pr-describe` fills it in later.
+2. Commit with the agreed message, following `$AWF_KIT/templates/commit-message.md`: `[<KEY>] <imperative summary>`, an optional body explaining why, **no task number**, and no `Co-Authored-By` or other trailers. The commit is authored by the configured git user. Keep T#'s status `review` until the commit succeeds; the commit gate uses it to find the review.
+3. If I said **approve & push**: push the branch. If there's no PR/MR for this branch yet, create a **draft** with the code host's CLI (`$AWF_KIT/docs/code-hosts.md`; e.g. `gh pr create --draft`), using a minimal placeholder body. `/pr-describe` fills it in later. With no usable CLI, just push and tell me to open the draft by hand.
 4. In `tasks.md`: set status to `done` in the section and the summary table, record the short SHA under **Commits**, and fill in **Review** with the verdict and `reviews/T#.md`.
 5. Add any deviations to `notes.md` (create it if needed), prefixed with the task ID and date.
 6. Append proposed follow-ups as new `todo` tasks at the end of `tasks.md` **only if I accepted them**.

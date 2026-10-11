@@ -1,29 +1,31 @@
 ---
-description: Produce the stakeholder test plan for the Jira ticket from e2e-plan.md — sanitized for the BA/PO, with screenshots captured per test item
-argument-hint: "[draft | evidence]"
+description: Produce the stakeholder test plan from e2e-plan.md — sanitized for the BA/PO, with screenshots captured per test item, ready to post to Jira, Linear, Azure Boards or any tracker
+argument-hint: "[draft | evidence] [markdown | jira | html]"
 ---
 
-# Jira test plan
+# Test plan (stakeholder version)
 
-Run this from the **ticket folder root**. Mode: `$ARGUMENTS` (`draft` if empty).
+Run this from the **ticket folder root**. Arguments: `$ARGUMENTS`.
+- **Mode:** `draft` (default) or `evidence`.
+- **Format:** `markdown` (default; works in GitHub, GitLab, Linear, Azure DevOps and most trackers), `jira` (Jira wiki markup, for Jira instances that don't render Markdown in comments), or `html`. The content is the same; only the markup changes.
 
 - **draft:** write the stakeholder test plan with Result and Evidence empty. Share it with the BA/PO early to confirm coverage.
 - **evidence:** run the tests locally, capture a screenshot per test item, and fill in Result and Evidence.
 
 There are two documents, with one source of truth:
 - `e2e-plan.md` is the **internal** plan. It stays in the ticket folder.
-- `test-plan-jira.md` is the **stakeholder** version, generated from it and posted to Jira.
+- `test-plan.md` is the **stakeholder** version, generated from it and posted wherever the ticket lives (Jira, Linear, Azure Boards, a GitHub or GitLab issue…).
 
-If they disagree, fix `e2e-plan.md` and regenerate. Don't hand-edit the Jira version.
+If they disagree, fix `e2e-plan.md` and regenerate. Don't hand-edit the stakeholder version.
 
 ## Step 1 — Check the source
 
 1. Read `ticket.md` (AC numbering and wording), `e2e-plan.md` and `tasks.md`.
 2. Every scenario and manual item in `e2e-plan.md` must have **TP IDs** with an evidence point. If any are missing, propose them (sequential: TP-01, TP-02…), show them, and add them to `e2e-plan.md` once I confirm. **Never renumber existing TP IDs.** Screenshots and earlier Jira comments refer to them.
 
-## Step 2 — Write `test-plan-jira.md`
+## Step 2 — Write `test-plan.md`
 
-Use `$AWF_KIT/templates/test-plan-jira.md`. Write for the **BA/PO**:
+Use `$AWF_KIT/templates/test-plan.md`, in the requested format. Write for the **BA/PO**:
 - Describe scenarios and steps in user terms ("Open an order and click Refund"), not test terms ("navigate to /orders/:id, click data-testid refund-btn").
 - Reference ACs with the same numbering and short wording as the Jira ticket.
 - For every AC not tested here, say why in plain language.
@@ -62,6 +64,6 @@ Report each hit and fix it. Hits inside screenshot file names (`<KEY>_TP-01.png`
 3. Look at a few screenshots to confirm they show what the Expected result says. Not just a loaded page, and no visible credentials or personal data. Report any that don't.
 4. Re-run the sanitization check from Step 2.
 5. Tell me in a few lines:
-   - Path to `test-plan-jira.md` and the `evidence/` folder
+   - Path to `test-plan.md` and the `evidence/` folder
    - Pass / fail counts, missing screenshots, manual items still open
-   - That it's ready to paste as a Jira comment, with the screenshots attached against the Evidence column
+   - That it's ready to paste into the ticket (comment or description, in the chosen format), with the screenshots attached against the Evidence column

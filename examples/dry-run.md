@@ -92,11 +92,11 @@ Start the app in another terminal first: `cd $AWF_TICKETS_ROOT/TODO-1/repos/todo
 - [ ] Specs follow the repo guidelines; ran twice
 - [ ] Break a selector on purpose once. Did it triage as a test bug?
 
-## 7. Evidence — `/jira-test-plan evidence`
+## 7. Evidence — `/test-plan evidence`
 **Check:**
 - [ ] Proposed a screenshot mechanism and **waited** before changing todo-e2e
 - [ ] `evidence/TODO-1_TP-01.png`… in the ticket folder, not in the repo
-- [ ] `test-plan-jira.md`: plain language, every row filled
+- [ ] `test-plan.md`: plain language, every row filled
 - [ ] Sanitization check reported clean (no paths, `T#`, SHAs, localhost)
 
 ## 8. Ship check

@@ -51,6 +51,27 @@ repo_root() {
   git -C "$p" rev-parse --show-toplevel 2>/dev/null
 }
 
+# Per-repo command overrides from <git common dir>/awf.env (written by /repo-setup).
+# It lives inside .git/, so it's per-clone and never committed. Only the four known
+# keys are read, as plain KEY=VALUE lines; the file is never sourced.
+load_repo_cmds() {
+  local root="$1" gd f key val
+  gd="$(git -C "$root" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)" || return 0
+  f="$gd/awf.env"
+  [ -f "$f" ] || return 0
+  while IFS= read -r line || [ -n "$line" ]; do
+    case "$line" in ''|'#'*) continue ;; esac
+    key="${line%%=*}"; val="${line#*=}"
+    val="${val#\"}"; val="${val%\"}"
+    case "$key" in
+      AWF_RSPEC_CMD)    RSPEC_CMD="$val" ;;
+      AWF_RUBOCOP_CMD)  RUBOCOP_CMD="$val" ;;
+      AWF_BRAKEMAN_CMD) BRAKEMAN_CMD="$val" ;;
+      AWF_AUDIT_CMD)    AUDIT_CMD="$val" ;;
+    esac
+  done < "$f"
+}
+
 # True if the repo's Gemfile.lock includes the given gem
 has_gem() { grep -qE "^    $2 \(" "$1/Gemfile.lock" 2>/dev/null; }
 

@@ -1,11 +1,11 @@
 # Test plan — {{KEY}}: {{ticket title}}
 
 <!--
-Stakeholder version, posted to the Jira ticket as a comment.
-Generated from e2e-plan.md by /jira-test-plan. Written for the BA/PO:
+Stakeholder version, posted to the ticket (Jira, Linear, Azure Boards, an issue…).
+Generated from e2e-plan.md by /test-plan, in Markdown unless another format was requested. Written for the BA/PO:
 - Plain language only. No file paths, repo or service names, code, spec names,
   internal task IDs (T#), commit SHAs, branch names or internal URLs.
-- Refer to ACs by the numbering on the Jira ticket.
+- Refer to ACs by the numbering on the ticket.
 - Each test item has a stable ID (TP-01, TP-02…). Screenshot files are named
   after these IDs so they can be attached against the right row.
 This comment block is removed from the posted version.

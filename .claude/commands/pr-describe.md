@@ -1,5 +1,5 @@
 ---
-description: Write or refresh a PR's title and description from the standard template, with real test results — shown for approval before updating GitHub
+description: Write or refresh a PR/MR title and description from the standard template, with real test results — shown for approval before updating GitHub, GitLab or Azure DevOps (or written to a file to paste)
 argument-hint: "[repo | PR number] [--refresh]"
 ---
 
@@ -11,7 +11,9 @@ Arguments: `$ARGUMENTS`
 - **Repo:** a repo name under `repos/`, a PR number, or empty for the current repo's branch PR.
 - **`--refresh`:** update an existing description after new commits, typically after `/resolve-review`.
 
-Nothing is changed on GitHub until I approve it.
+Nothing is changed on the code host until I approve it.
+
+**Code host:** detect it from `git remote get-url origin` and use the matching CLI and commands from `$AWF_KIT/docs/code-hosts.md` (GitHub `gh`, GitLab `glab`, Azure DevOps `az repos`). The `gh` commands below are the GitHub versions; translate them for other hosts. If no CLI fits or it isn't logged in, use **manual mode** from that file. Call it a merge request (MR) on GitLab.
 
 ## Step 1 — Find the PR and context
 

@@ -15,7 +15,7 @@ Coverage notes from me: `$ARGUMENTS`
 
 Read:
 - `ticket.md` (ACs), `plan.md` (approach, contracts, e2e coverage notes) and `tasks.md`
-- The Playwright repo's `CLAUDE.md` and any guideline docs it points to. **These are the rules for structure, naming, fixtures, page objects, tags and test data. Follow them over anything in this command or the template.**
+- The Playwright repo's instruction files (`CLAUDE.md`, `CLAUDE.local.md`, `.claude/rules/`, `AGENTS.md`) and any guideline docs they point to. **These are the rules for structure, naming, fixtures, page objects, tags and test data. Follow them over anything in this command or the template.**
 - Existing specs in the Playwright repo for the same area of the app, so new scenarios match how similar flows are already tested
 
 If there's no Playwright repo under `repos/`, ask me for its folder name before going further.
@@ -36,7 +36,7 @@ Use `$AWF_KIT/templates/e2e-plan.md`. Fill in:
 2. **Environment and data:** the target is the **local stack**. List every repo that must be running (the `change` and `run` repos from `ticket.md`) with the branch it must be on. Include the base URL and how to start it, from the Playwright repo's `CLAUDE.md`. Also list flags, users and roles, seed data, and cleanup.
 3. **Selectors the app must provide:** prefer roles and accessible names, per the repo's guidelines. For each `data-testid` needed, name the feature task that will add it.
 4. **Scenarios:** one per user flow, each with the ACs covered, tags (using the repo's tag conventions), preconditions, steps, expected results and target spec file path. Reuse existing page objects and fixtures where they exist and name them.
-5. **Test items:** give each scenario one or more TP IDs (sequential: TP-01, TP-02…), each with a plain-language check and an **evidence point**, the moment a screenshot proves it. These become the rows of the Jira test plan (`/jira-test-plan`). Never renumber existing IDs.
+5. **Test items:** give each scenario one or more TP IDs (sequential: TP-01, TP-02…), each with a plain-language check and an **evidence point**, the moment a screenshot proves it. These become the rows of the stakeholder test plan (`/test-plan`). Never renumber existing IDs.
 6. **Manual test items:** ACs the BA/PO will want evidence for that aren't automated. Give them TP IDs too.
 7. **Out of scope** and **Risks** (flaky areas: async jobs, emails, third-party sandboxes)
 

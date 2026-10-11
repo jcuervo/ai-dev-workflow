@@ -6,7 +6,7 @@ A checklist for installing the kit on a machine, plus what's still to do. Tick t
 
 ## 1. Install on a machine
 
-Do this on **each** machine you use: personal and work.
+Do this on **each** machine you use: personal (macOS) and work (Ubuntu). The per-OS commands are in the [README](../README.md#installing). On Windows, use WSL 2 and follow the Ubuntu steps inside it.
 
 ### 1.1 Get the repo
 - [ ] Personal machine: already at `~/dev-utilities/ai-dev-workflow`
@@ -15,7 +15,7 @@ Do this on **each** machine you use: personal and work.
 
 ### 1.2 Prerequisites
 - [ ] `jq`: `brew install jq` (macOS) or `sudo apt install jq` (Ubuntu). The installer and hooks need it.
-- [ ] `gh` installed and authenticated: `gh auth status` (for `/pr-describe` and `/resolve-review`). On Ubuntu, install it from GitHub's apt repository (see cli.github.com).
+- [ ] The CLI for your code host, logged in: `gh` (GitHub: `gh auth status`), `glab` (GitLab: `glab auth status`) or `az` with the azure-devops extension. Without one, `/pr-describe` and `/resolve-review` work in manual mode. See `docs/code-hosts.md`.
 
 ### 1.3 Run the installer
 ```bash
@@ -29,7 +29,7 @@ It works on macOS and Ubuntu, with zsh or bash. It links the commands and agents
 - [ ] Open a new terminal, then restart Claude Code
 - [ ] **Commit identity:** commits are authored by your git identity, and the installer turns off Claude's `Co-Authored-By` and PR attribution (setting `attribution` in `~/.claude/settings.json`; a hook also blocks it). Check `git config user.name` and `git config user.email`. On the work machine, if work repos need a different identity from your personal one, use `includeIf` (see section 2).
 - [ ] Run `/hooks` and confirm the six hooks are listed
-- [ ] If repos run tests in Docker or via `bin/rspec`: set `AWF_RSPEC_CMD` (and `AWF_RUBOCOP_CMD`, `AWF_BRAKEMAN_CMD`) in the `env` block of `~/.claude/settings.json`, so the hooks see them
+- [ ] **Run `/repo-setup <repo>` once for each service repo** (start Claude Code in the repo). If the repo already has a team `CLAUDE.md` (or `AGENTS.md`), it audits it and puts only what's missing or wrong in your personal `CLAUDE.local.md`, ignored by git, and never edits the team's file. If the repo has none, it drafts one. Either way, it records per-repo spec and lint commands for the hooks in `.git/awf.env`.
 
 ### 1.6 Verify
 - [ ] Type `/` in Claude Code and confirm the commands appear (`/build-task`, `/pr-describe`…)
@@ -80,8 +80,9 @@ Everything is **drafting** until it has been used on real work. Rehearse first w
 
 - [ ] **Hooks:** make one edit and one commit in a real Rails repo. Check RuboCop feedback appears and the specs gate runs the right specs.
 - [ ] **`/pr-describe`:** on your next PR. Check the template, real test results and related PRs.
+- [ ] **`/ticket-ship check`, then `/ticket-ship`:** on a ticket with 2+ repos. Check the DoD report, the push plan, and the cross-linked PRs in deploy order.
 - [ ] **`/resolve-review`:** on the next PR with review comments. Check the triage table, replies and the `--refresh` of the description.
-- [ ] **Full ticket:** `/ticket-init` → `/analyze-ticket` → `/update-analysis` → `/plan-ticket` → `/e2e-plan` → `/build-task` loop → `/jira-test-plan evidence` → `/pr-describe` → `/resolve-review`.
+- [ ] **Full ticket:** `/ticket-init` → `/analyze-ticket` → `/update-analysis` → `/plan-ticket` → `/e2e-plan` → `/build-task` loop → `/test-plan evidence` → `/pr-describe` → `/resolve-review`.
 - [ ] **E2E on the work machine:** confirm `/e2e-plan` follows the Playwright repo's `CLAUDE.md`, and decide how evidence screenshots are captured (the repo's own mechanism, or env-gated `page.screenshot()`).
 
 After each, note what to fix in `CHANGELOG.md` and update the command.
@@ -92,9 +93,6 @@ After each, note what to fix in `CHANGELOG.md` and update the command.
 
 | Priority | Item | What it's for |
 |---|---|---|
-| P2 | `/ticket-status` | Done, blocked, ACs without passing specs, branches ready to push |
-| P2 | `/dod-check` | Definition of Done gate before marking PRs ready |
-| P2 | `CLAUDE.md` starter for service repos | Short, current repo context: commands, conventions, gotchas |
 | P3 | `/capture-learnings` | Turn recurring review findings into `CLAUDE.md` rules or review-skill references |
 | P3 | `/ticket-retro` | Metrics per ticket: questions, review rounds, cycle time |
 | P3 | `contract-checker` agent | Catch API and event contract mismatches across repos |
@@ -108,7 +106,7 @@ Tracked in [`workflow.md`](workflow.md#open-decisions). Still open:
 - **D5:** automated first-pass PR review in CI
 - **D6:** how the org code review skill is referenced
 - **D7:** who resolves review threads
-- **D9:** Jira test plan format and posting
+- **D9:** Stakeholder test plan format and posting
 
 Decided:
 - **D1:** symlinks for now

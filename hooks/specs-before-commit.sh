@@ -8,6 +8,7 @@ detect_commit || exit 0
 root="$(repo_root "$COMMIT_DIR")"
 [ -n "$root" ] && [ -f "$root/Gemfile" ] || exit 0
 has_gem "$root" rspec-core || exit 0
+load_repo_cmds "$root"
 
 specs=""
 add_spec() { [ -f "$root/$1" ] && specs="$specs

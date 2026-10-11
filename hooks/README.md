@@ -7,7 +7,7 @@ Deterministic checks that run on their own. Commands can skip a step; hooks can'
 | `protected-files.sh` | PreToolUse: Edit, Write, MultiEdit, NotebookEdit | Denies edits to secrets and generated files listed in `protected-paths.txt` (`.env*`, credentials, keys, `db/schema.rb`, lock files…), with a reason saying what to do instead | Yes, denies the edit |
 | `rubocop-on-edit.sh` | PostToolUse: Edit, Write, MultiEdit | Runs RuboCop on the Ruby file just edited and feeds offenses back to Claude | Feedback only (the edit already happened) |
 | `commit-message-check.sh` | PreToolUse: Bash (`git commit`) | Denies commit messages with AI attribution (`Co-Authored-By`, "Generated with Claude"), so commits read as yours | Yes, denies the commit |
-| `review-before-commit.sh` | PreToolUse: Bash (`git commit`) | For task commits (`[KEY][T#]` in the message), requires `<ticket>/reviews/T#.md` and denies a `Verdict: not ready`. Makes the per-task review mandatory | Yes, denies the commit |
+| `review-before-commit.sh` | PreToolUse: Bash (`git commit`) | For a ticket commit (`[KEY]` in the message), every task that's `in-progress` or `review` in that ticket's `tasks.md` must have `reviews/T#.md` with a final verdict other than `not ready`. Review-fix commits (`Address review:`) pass. Makes the per-task review mandatory | Yes, denies the commit |
 | `specs-before-commit.sh` | PreToolUse: Bash (`git commit`) | Finds specs related to the changed files (`app/x.rb` → `spec/x_spec.rb`, controllers → request specs, changed specs themselves) and runs them | Yes, if any fail |
 | `security-before-commit.sh` | PreToolUse: Bash (`git commit`) | Brakeman, reporting only warnings **in changed files** so existing warnings don't block; bundler-audit when `Gemfile.lock` changed | Yes, on findings |
 
@@ -43,6 +43,8 @@ Environment variables, read when Claude starts. Put them in the `env` block of `
 | `AWF_RUBOCOP_CMD` | `bundle exec rubocop` | |
 | `AWF_BRAKEMAN_CMD` | `bundle exec brakeman` | |
 | `AWF_AUDIT_CMD` | `bundle exec bundle-audit` | |
+
+**Per-repo commands:** if a repo runs specs differently (Docker, `bin/` wrappers), put the overrides in `<repo>/.git/awf.env`. `/repo-setup` writes it. It's per clone, never committed, and read as plain `KEY=VALUE` lines (never executed). It covers `AWF_RSPEC_CMD`, `AWF_RUBOCOP_CMD`, `AWF_BRAKEMAN_CMD` and `AWF_AUDIT_CMD`, and takes precedence over the global values. Commands run from the repo root with repo-relative paths appended.
 
 Add patterns to `protected-paths.txt` as needed. A leading `!` re-allows a path, and later lines win.
 
