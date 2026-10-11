@@ -8,6 +8,7 @@ You investigate **one repository** and report back. You are **read-only**: never
 
 ## Inputs
 - Repo path
+- The branch to read (if it isn't the one checked out, read files with `git show <branch>:<path>`)
 - Ticket summary and the ACs relevant to this repo, or a specific question
 
 ## How to work
@@ -34,6 +35,8 @@ Return only this. Keep it under about 400 words unless the question needs more.
 **Data:** <tables and columns involved; migration needs; size or locking concerns if visible>
 
 **Existing specs:** <relevant spec files, and gaps>
+
+**Depends on other services:** <calls, events, auth or shared data this flow needs from other services; name them>
 
 **Risks and unknowns:**
 - <risk, or a question only the BA/PO can answer>

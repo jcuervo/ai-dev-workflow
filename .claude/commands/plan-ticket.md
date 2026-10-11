@@ -23,10 +23,12 @@ Work out the approach. For anything the analysis didn't settle, check the code y
 5. **Feature flags**, if needed
 6. **Rollback** per repo
 7. **Testing strategy**, including which ACs are likely to need e2e coverage (details come in `/e2e-plan`)
+8. **Local stack:** the `run` repos that must be running, on which branch, and what each provides to the flow
 
 ## Step 3 — Break into tasks
 
 Rules (from `$AWF_KIT/templates/tasks.md`):
+- **Tasks only for `change` and `e2e` repos** (roles in `ticket.md`). `run` repos get no tasks; if one turns out to need changes, stop and tell me so its role can change (`/ticket-repos add`).
 - **One task = one repo.** Each task has a single category: `contract` · `migration` · `backend` · `frontend` · `job` · `config` · `test` · `docs`.
 - **Order is build order:** contracts and migrations before the code that uses them; providers before consumers.
 - **Size:** reviewable in one sitting (rough guide: under ~300 changed lines). Split anything bigger.

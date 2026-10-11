@@ -15,7 +15,12 @@ Not every AC needs an e2e test. Use e2e for user-visible flows across pages or s
 | AC2 | no | — | Covered by request specs; no UI |
 
 ## 2. Environment and data
-- **Target environment:** local stack on the ticket branches · base URL {{http://localhost:...}}
+- **Target environment:** local stack · base URL {{http://localhost:...}}
+- **Stack required** (checked before every run; see `/ticket-repos status`):
+  | Repo | Role | Must be on | Runs in |
+  |---|---|---|---|
+  | {{repo}} | change | ticket branch | docker |
+  | {{repo}} | run | main (latest) | docker |
 - **How to start it:** {{from the Playwright repo's CLAUDE.md}}
 - **Feature flags:** {{flag: state needed}}
 - **Users / roles:** {{fixtures or accounts used}}

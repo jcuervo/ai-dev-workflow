@@ -6,12 +6,14 @@
 [ "${AWF_SKIP_HOOKS:-0}" = "1" ] && exit 0
 
 if ! command -v jq >/dev/null 2>&1; then
-  echo "ai-dev-workflow hooks need jq (brew install jq); skipping check." >&2
+  echo "ai-dev-workflow hooks need jq (brew install jq / sudo apt install jq); skipping check." >&2
   exit 1   # non-blocking: shows a hook error notice, action proceeds
 fi
 
-# Make rbenv / Homebrew Ruby visible when Claude was launched from an app (e.g. VS Code)
-for d in "$HOME/.rbenv/shims" "/opt/homebrew/bin" "/usr/local/bin"; do
+# Make version-managed Ruby/Node visible when Claude was launched from an app (e.g. VS Code)
+# rbenv, asdf, mise, Homebrew (macOS), Linuxbrew
+for d in "$HOME/.rbenv/shims" "$HOME/.asdf/shims" "$HOME/.local/share/mise/shims" \
+         "/opt/homebrew/bin" "/usr/local/bin" "/home/linuxbrew/.linuxbrew/bin"; do
   [ -d "$d" ] && case ":$PATH:" in *":$d:"*) ;; *) PATH="$d:$PATH" ;; esac
 done
 export PATH
@@ -26,12 +28,19 @@ HOOK_INPUT="$(cat)"
 
 input_get() { printf '%s' "$HOOK_INPUT" | jq -r "$1 // empty"; }
 
-# Absolute path, resolved against the hook's cwd when relative
+# Absolute, physical path (symlinks resolved), relative paths taken from the
+# hook's cwd. Physical matters in branch mode, where repos/<name> in the ticket
+# folder is a symlink to the real clone. Works for files that don't exist yet.
 abs_path() {
+  local p rest=""
   case "$1" in
-    /*) printf '%s\n' "$1" ;;
-    *)  printf '%s/%s\n' "$(input_get '.cwd')" "$1" ;;
+    /*) p="$1" ;;
+    *)  p="$(input_get '.cwd')/$1" ;;
   esac
+  while [ ! -d "$p" ] && [ "$p" != "/" ]; do
+    rest="/$(basename "$p")$rest"; p="$(dirname "$p")"
+  done
+  printf '%s%s\n' "$(cd "$p" && pwd -P)" "$rest"
 }
 
 # Git repo root containing a path (file or directory), or fail
@@ -64,6 +73,7 @@ detect_commit() {
   fi
   [ -z "$dir" ] && dir="$cwd"
   case "$dir" in /*) ;; "~"*) dir="$HOME${dir#\~}" ;; *) dir="$cwd/$dir" ;; esac
+  [ -d "$dir" ] && dir="$(cd "$dir" && pwd -P)"
   COMMIT_DIR="$dir"
   return 0
 }

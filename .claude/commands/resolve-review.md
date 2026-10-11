@@ -12,8 +12,9 @@ Run this from the repo, or from the ticket folder root (then `cd` into `repos/<r
 ## Step 1 — Pull everything
 
 1. Find the PR: `gh pr view <pr> --json number,url,title,headRefName,baseRefName,author`.
-2. Make sure the local branch is current: `git fetch` and confirm the branch isn't behind its remote. If it is, stop and tell me rather than pulling over local changes.
-3. Fetch **unresolved review threads** (inline comments) with GraphQL:
+2. Make sure you're on the PR's branch (`headRefName`), not the default branch. If you aren't, stop and tell me.
+3. Make sure the local branch is current: `git fetch` and confirm the branch isn't behind its remote. If it is, stop and tell me rather than pulling over local changes.
+4. Fetch **unresolved review threads** (inline comments) with GraphQL:
    ```bash
    gh api graphql -F owner='{owner}' -F repo='{repo}' -F pr=<number> -f query='
    query($owner:String!,$repo:String!,$pr:Int!){
@@ -26,8 +27,8 @@ Run this from the repo, or from the ticket folder root (then `cd` into `repos/<r
    }'
    ```
    Keep only threads with `isResolved: false`. Read every comment in each thread, not just the first.
-4. Fetch **review summaries and general PR comments**: `gh pr view <pr> --json reviews,comments`. Include bot reviews (Claude, CI bots). Ignore ones that only say approved or LGTM.
-5. Skip anything I've already replied to, unless the reviewer replied after me.
+5. Fetch **review summaries and general PR comments**: `gh pr view <pr> --json reviews,comments`. Include bot reviews (Claude, CI bots). Ignore ones that only say approved or LGTM.
+6. Skip anything I've already replied to, unless the reviewer replied after me.
 
 ## Step 2 — Triage
 
@@ -52,7 +53,7 @@ For each approved **fix** (or group):
 1. Make the smallest change that addresses it, staying within this PR's scope. If a fix would grow the PR noticeably, stop and suggest a follow-up ticket instead.
 2. Add or adjust specs where behaviour changed.
 3. Commit separately, staging by explicit path (never `git add -A`):
-   `[KEY] Address review: <summary>` (KEY from the branch name or ticket folder)
+   `[KEY] Address review: <summary>` (KEY from the branch name or ticket folder). No `Co-Authored-By` or other trailers.
 4. Note the short SHA against the item.
 
 ## Step 4 — Verify

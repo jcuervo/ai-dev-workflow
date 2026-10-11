@@ -31,6 +31,13 @@ Define every API, event and shared-schema change before implementation starts.
 ### {{repo}}
 - {{change}} → tasks T1, T2
 
+## 3a. Local stack
+Repos that must be running for development and e2e, beyond the ones changed here.
+
+| Repo | Role | Branch | Provides |
+|---|---|---|---|
+| {{repo}} | run | main (latest) | {{e.g. auth tokens for the e2e login}} |
+
 ## 4. Data and migrations
 - Migration list, whether each is safe online, backfill strategy, lock risk
 - Strong_migrations-style concerns (adding indexes concurrently, column defaults, etc.)

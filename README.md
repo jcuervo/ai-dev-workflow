@@ -31,44 +31,16 @@ This repo holds **tooling only**. Ticket content, analysis documents and client 
 
 ## Installing
 
-The full per-machine checklist, including the work machine, is in [`docs/setup-and-next-steps.md`](docs/setup-and-next-steps.md).
-
-Symlink the commands and agents into your personal Claude config. They then work in any Claude Code session, and edits in this repo take effect immediately.
-
 ```bash
+brew install jq gh            # macOS prerequisites, if missing
+sudo apt install jq gh        # Ubuntu (gh may need GitHub's apt repo: cli.github.com)
 cd ~/dev-utilities/ai-dev-workflow
-mkdir -p ~/.claude/commands ~/.claude/agents
-ln -sf "$PWD"/.claude/commands/*.md ~/.claude/commands/
-ln -sf "$PWD"/.claude/agents/*.md ~/.claude/agents/
+AWF_REPOS_ROOT=~/work/repos ./install.sh   # the folder holding your service repos
 ```
 
-Then tell the commands where the kit lives by adding these lines to `~/.zshrc`:
+`install.sh` works on macOS and Linux, with zsh or bash. It symlinks the commands and agents into `~/.claude/`, writes the `AWF_*` settings to **Claude Code's own `env` in `~/.claude/settings.json`** (so commands and hooks see them however Claude Code is started, terminal or VS Code), mirrors them in `~/.config/ai-dev-workflow/env.sh` for your terminal (sourced from `~/.bashrc` and/or `~/.zshrc`), creates `~/work/tickets`, builds the **repo registry** from `AWF_REPOS_ROOT`, merges the hooks (backing up `settings.json` first), and turns off Claude's commit attribution. **Re-run it whenever commands or agents are added to the kit.** Then open a new terminal and restart Claude Code.
 
-```bash
-export AWF_KIT="$HOME/dev-utilities/ai-dev-workflow"
-export AWF_TICKETS_ROOT="$HOME/work/tickets"   # where ticket folders are created
-```
-
-Re-run the two `ln` lines whenever a new command or agent file is added. Check with:
-
-```bash
-ls -l ~/.claude/commands ~/.claude/agents
-```
-
-To uninstall, remove only the symlinks that point here:
-
-```bash
-find ~/.claude/commands ~/.claude/agents -lname "$HOME/dev-utilities/ai-dev-workflow/*" -print -delete
-```
-
-Install the hooks (needs `jq`):
-
-```bash
-hooks/install.sh             # merges into ~/.claude/settings.json; safe to re-run
-hooks/install.sh --uninstall # removes only these hooks
-```
-
-Packaging as a plugin is still an option for later (decision D1 in `docs/workflow.md`).
+To uninstall the hooks: `hooks/install.sh --uninstall`. The full per-machine checklist is in [`docs/setup-and-next-steps.md`](docs/setup-and-next-steps.md).
 
 ## Quick reference
 
@@ -76,8 +48,9 @@ Run commands from the **ticket folder root** (e.g. `~/work/tickets/PROJ-123/`), 
 
 | Phase | Command | What it does | Status |
 |---|---|---|---|
-| Setup | `/ticket-init <KEY> [desc]` | Creates the ticket folder, `ticket.md` with numbered ACs, and a branch and worktree in every affected repo | drafting |
-| Analysis | `/analyze-ticket [notes]` | Parallel repo exploration, then `analysis.md`, `open-questions.md` and a paste-ready question list for Jira | drafting |
+| Setup | `/ticket-init <KEY> [desc]` | Creates the ticket folder and `ticket.md` with numbered ACs, and proposes candidate repos from the registry | drafting |
+| Analysis | `/analyze-ticket [notes]` | Parallel repo exploration, then `analysis.md`, `open-questions.md`, confirmed repos and roles, and a paste-ready question list for Jira | drafting |
+| Branches | `/ticket-repos [setup \| add \| status \| release]` | Ticket branch in every `change`/`e2e` repo, `run` repos on latest default; stack check; switch back when done | drafting |
 | Clarify | `/update-analysis` | Applies the BA/PO's answers as a delta, logged in the change log | drafting |
 | Plan | `/plan-ticket [notes]` | Proposes the plan and task breakdown in chat, then writes `plan.md` and `tasks.md` on approval | drafting |
 | Plan | `/e2e-plan [coverage notes]` | Writes the Playwright test plan with TP IDs and adds e2e tasks to `tasks.md`; you decide coverage | drafting |

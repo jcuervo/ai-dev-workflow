@@ -9,8 +9,9 @@ Priority: **P1** build first (core loop) · **P2** next · **P3** later or nice-
 
 | Command | Purpose | Inputs | Outputs | Priority | Status |
 |---|---|---|---|---|---|
-| `/ticket-init <KEY>` | Create the ticket folder. Pull the ticket from Jira (MCP), or take it pasted. Record affected repos and create branches/worktrees. | Jira key or pasted ticket | `ticket.md`, folder skeleton, branches | P1 | drafting |
-| `/analyze-ticket` | Full analysis against the Definition of Ready: scope, impacted repos, risks, assumptions, edge cases. Uses parallel explorer agents per repo. | `ticket.md`, repos | `analysis.md`, `open-questions.md` | P1 | drafting |
+| `/ticket-init <KEY>` | Create the ticket folder and `ticket.md` (Jira via MCP, paste or file), number the ACs, and propose **candidate repos** with roles from the registry. Creates no branches. | Jira key, ticket text, repo registry | `ticket.md`, folder skeleton | P1 | drafting |
+| `/ticket-repos [setup\|add\|status\|release]` | Create the ticket branch in every `change`/`e2e` repo (branch mode: in your clones; worktree mode: separate checkouts), put `run` repos on their latest default branch, add a repo mid-ticket, check stack state before e2e, and switch clones back when done. Never stashes or discards. | `ticket.md`, repo registry | Branches, `repos/` links, updated table | P1 | drafting |
+| `/analyze-ticket` | Explores candidate repos read-only, follows dependencies to other services, confirms repos and roles (`change`/`e2e`/`run`/`reference`). Full analysis against the Definition of Ready: scope, impacted repos, risks, assumptions, edge cases. Uses parallel explorer agents per repo. | `ticket.md`, repos | `analysis.md`, `open-questions.md` | P1 | drafting |
 | `/update-analysis` | Apply BA/PO answers as a **delta**: update only affected sections and log the changes. | `open-questions.md` with answers | Updated `analysis.md`, change log entry | P1 | drafting |
 
 ### Phase 2 — Planning
@@ -26,7 +27,7 @@ Priority: **P1** build first (core loop) · **P2** next · **P3** later or nice-
 | Command | Purpose | Inputs | Outputs | Priority | Status |
 |---|---|---|---|---|---|
 | `/build-task [id\|next]` | The core loop: pick task → minimal context → failing specs → implement → verify → independent review → human approval → commit → mark done → stop. | `tasks.md`, plan section | Commits, updated `tasks.md`. **E2E variant:** for `e2e` tasks, writes the Playwright spec per the repo's guidelines, runs it locally twice, and triages failures (test bug / app bug / pre-existing, checked against `main`). | P1 | drafting |
-| `/review-task [id]` | Run the independent review on its own (also called by `/build-task`). Checks against the task's ACs plus the review skill. | Task diff, task entry | Review findings | P1 | drafting |
+| `/review-task [id]` | Run the independent review on its own (also called by `/build-task`), against the task's ACs plus the review skill, and save it to `reviews/T#.md`. Also for retroactive reviews of done tasks. | Task diff, task entry | Review findings | P1 | drafting |
 | `/ticket-status` | Show done, blocked, ACs without passing specs, and branches ready to push. | `tasks.md`, repos | Status report | P2 | planned |
 
 ### Phase 4 — Ship
@@ -59,7 +60,16 @@ Priority: **P1** build first (core loop) · **P2** next · **P3** later or nice-
 | Lint & format (`rubocop-on-edit.sh`) | After each edit | RuboCop on the edited Ruby file; offenses fed back to Claude. Autocorrect opt-in | P1 | drafting |
 | Tests gate (`specs-before-commit.sh`) | Before `git commit` | Run specs related to changed files; block on failure | P1 | drafting |
 | Security scan (`security-before-commit.sh`) | Before `git commit` | Brakeman (warnings in changed files only), bundler-audit when `Gemfile.lock` changed | P2 | drafting |
+| Commit message (`commit-message-check.sh`) | Before `git commit` | Deny AI attribution (Co-Authored-By, "Generated with Claude") in commit messages | P1 | drafting |
+| Review gate (`review-before-commit.sh`) | Before `git commit` | Task commits need `reviews/T#.md` with a verdict other than `not ready` | P1 | drafting |
 | Protected files (`protected-files.sh`) | Before edit | Deny edits to secrets and generated files (`protected-paths.txt`), with what to do instead | P2 | drafting |
+
+## Scripts
+
+| Script | Purpose | Status |
+|---|---|---|
+| `install.sh` | Per-machine setup: links, env vars, tickets folder, registry, hooks. Safe to re-run | drafting |
+| `bin/awf-repos-scan` | Build or extend the repo registry from a folder of clones; keeps existing entries | drafting |
 
 ## Templates
 

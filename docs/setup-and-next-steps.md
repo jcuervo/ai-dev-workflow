@@ -14,33 +14,22 @@ Do this on **each** machine you use: personal and work.
 - [ ] Work machine: clone it to the same path, `~/dev-utilities/ai-dev-workflow`
 
 ### 1.2 Prerequisites
-- [ ] `jq`: `brew install jq` (the hooks need it)
-- [ ] `gh` installed and authenticated: `gh auth status` (for `/pr-describe` and `/resolve-review`)
+- [ ] `jq`: `brew install jq` (macOS) or `sudo apt install jq` (Ubuntu). The installer and hooks need it.
+- [ ] `gh` installed and authenticated: `gh auth status` (for `/pr-describe` and `/resolve-review`). On Ubuntu, install it from GitHub's apt repository (see cli.github.com).
 
-### 1.3 Commands and agents
+### 1.3 Run the installer
 ```bash
 cd ~/dev-utilities/ai-dev-workflow
-mkdir -p ~/.claude/commands ~/.claude/agents
-ln -sf "$PWD"/.claude/commands/*.md ~/.claude/commands/
-ln -sf "$PWD"/.claude/agents/*.md ~/.claude/agents/
+AWF_REPOS_ROOT=~/work/repos ./install.sh    # the folder holding your service repos
 ```
-- [ ] Done. **Re-run the two `ln` lines whenever a new command or agent file is added.**
-
-### 1.4 Environment variables
-Add to `~/.zshrc`, then open a new terminal:
-```bash
-export AWF_KIT="$HOME/dev-utilities/ai-dev-workflow"
-export AWF_TICKETS_ROOT="$HOME/work/tickets"
-```
-- [ ] Done
-
-### 1.5 Hooks
-```bash
-~/dev-utilities/ai-dev-workflow/hooks/install.sh
-```
-- [ ] Installed (it backs up `~/.claude/settings.json` first and is safe to re-run)
-- [ ] Restart Claude Code, then run `/hooks` and confirm the four hooks are listed
-- [ ] If repos run tests in Docker or via `bin/rspec`: set `AWF_RSPEC_CMD` (and `AWF_RUBOCOP_CMD`, `AWF_BRAKEMAN_CMD`) in `~/.zshrc`
+It works on macOS and Ubuntu, with zsh or bash. It links the commands and agents into `~/.claude/`, and writes the settings to two places: Claude Code's `env` in `~/.claude/settings.json` (what commands and hooks use, however Claude Code is launched) and `~/.config/ai-dev-workflow/env.sh` (for your terminal, sourced from `~/.bashrc` and/or `~/.zshrc`). It also creates `~/work/tickets`, builds the repo registry, merges the hooks into `~/.claude/settings.json` (backed up first), and turns off Claude's commit attribution.
+- [ ] Done. **Re-run it whenever a new command or agent is added to the kit.**
+- [ ] Open `~/.config/ai-dev-workflow/repos.yml` and **write a one-line description for each service** (what it owns, its main APIs and events). Commands use these to propose repos, so accuracy matters. Fix `kind` and `runs_in` where the scan guessed wrong. Run `bin/awf-repos-scan` again when you clone a new repo.
+- [ ] Branch mode is the default (the ticket branch goes in your normal clones, which suits Docker). Use `AWF_BRANCH_MODE=worktree ./install.sh` to switch.
+- [ ] Open a new terminal, then restart Claude Code
+- [ ] **Commit identity:** commits are authored by your git identity, and the installer turns off Claude's `Co-Authored-By` and PR attribution (setting `attribution` in `~/.claude/settings.json`; a hook also blocks it). Check `git config user.name` and `git config user.email`. On the work machine, if work repos need a different identity from your personal one, use `includeIf` (see section 2).
+- [ ] Run `/hooks` and confirm the six hooks are listed
+- [ ] If repos run tests in Docker or via `bin/rspec`: set `AWF_RSPEC_CMD` (and `AWF_RUBOCOP_CMD`, `AWF_BRAKEMAN_CMD`) in the `env` block of `~/.claude/settings.json`, so the hooks see them
 
 ### 1.6 Verify
 - [ ] Type `/` in Claude Code and confirm the commands appear (`/build-task`, `/pr-describe`…)
@@ -48,6 +37,15 @@ export AWF_TICKETS_ROOT="$HOME/work/tickets"
 ---
 
 ## 2. Things to remember
+
+**Commit identity**
+- Commits use your git identity (`git config user.name/email`). No Claude attribution: `attribution` is off in `~/.claude/settings.json`, and `commit-message-check.sh` denies any commit message carrying it.
+- For different identities per folder (e.g. personal vs work), add to `~/.gitconfig`:
+  ```ini
+  [includeIf "gitdir:~/work/"]
+    path = ~/.gitconfig-work
+  ```
+  with the work `[user]` name and email in `~/.gitconfig-work`.
 
 **Hooks**
 - They do nothing outside Rails repos, or when a gem isn't in that repo's `Gemfile.lock`. They're safe in the Playwright repo and in non-work projects.
@@ -59,10 +57,15 @@ export AWF_TICKETS_ROOT="$HOME/work/tickets"
 - Brakeman only blocks on warnings **in changed files**. A false positive goes in `config/brakeman.ignore`.
 
 **Commands**
+- Repo roles: `change` and `e2e` get the ticket branch; `run` repos stay on their latest default branch but must be running; `reference` is read only.
+- In branch mode a clone holds one ticket at a time. `/ticket-repos release` before switching tickets, and `/ticket-repos status` before e2e or evidence runs.
 - Run ticket commands from the **ticket folder root** (`$AWF_TICKETS_ROOT/<KEY>/`). `/pr-describe` and `/resolve-review` also work from inside a repo without a ticket folder.
 - One task per session: `/build-task next` → approve → `/clear` → repeat.
 - Playwright runs **locally only**. A failing test is checked against `main` before it's treated as a regression.
 - Screenshots and ticket content stay in the ticket folder, never in this repo or the Playwright repo.
+
+**Changing settings**
+- Re-run the installer with the new value, e.g. `AWF_BRANCH_MODE=worktree ./install.sh`. It updates both `~/.claude/settings.json` and `env.sh`. Don't edit only one of them.
 
 **Maintaining the kit**
 - A command misbehaves → edit its `.md` file. The change takes effect in the next session, thanks to the symlinks.

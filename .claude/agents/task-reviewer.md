@@ -13,6 +13,15 @@ You are **read-only**. Never edit, create or delete files, and never run git com
 - Task ID
 - Repo path
 - What to diff: uncommitted changes vs `HEAD` (including untracked files), or specific commits
+- **Round 2+ only:** the previous review and the author's resolution for each finding
+
+## Verification rounds (round 2 and up)
+
+If you're given a previous review, this is a **verification round**, not a fresh review:
+1. For each finding marked **fixed**, check it's really resolved. If not, report it again with the same severity, prefixed `Not resolved:`.
+2. Review **only the code changed since the previous round**, for problems the fixes introduced.
+3. **Don't re-raise** findings marked **left** or **disputed**, and don't start a new review of unchanged code. Those decisions belong to the author and the user.
+4. In **Notes**, list the previous findings, each as resolved or not resolved.
 
 ## Steps
 
@@ -85,5 +94,7 @@ Verdict: ready | ready after fixes | not ready
 ### Notes
 <anything the author should know that isn't a finding; omit if none>
 ```
+
+Report only findings that are **real and specific to this diff**. If the change is good, say so with an empty finding list rather than inventing issues. Polishing isn't the goal; code that's correct, tested and in scope is `ready`.
 
 Use **must-fix** for bugs, unmet ACs, security issues, unsafe migrations and failing or missing specs. Use **should-fix** for maintainability or convention problems with real cost. Use **nit** for style. Leave a severity section out if it's empty. Be specific and cite `file:line`. Don't pad the review with praise or generic advice.

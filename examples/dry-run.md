@@ -14,8 +14,8 @@ Rehearse the kit end to end on a throwaway app before relying on it at work. Exp
 ## 0. One-off setup
 
 ```bash
-# Kit installed? (see docs/setup-and-next-steps.md §1)
-ls -l ~/.claude/commands | head; echo $AWF_KIT $AWF_TICKETS_ROOT
+# Install the kit (once per machine), then open a new terminal
+cd ~/dev-utilities/ai-dev-workflow && ./install.sh
 
 # App: adds RSpec, makes the first commit
 cd ~/dev-utilities/sample-app/todo-list && bin/awf-setup
@@ -24,13 +24,19 @@ cd ~/dev-utilities/sample-app/todo-list && bin/awf-setup
 cd ~/dev-utilities/sample-app/todo-e2e && ./setup.sh
 ```
 
+**Note:** TODO-1 was set up with worktrees before the repo registry and branch mode existed. It keeps working as is (`/build-task` handles both modes), so carry on. Try `/ticket-repos status` at any point. For the next ticket, `/ticket-init` proposes repos from the registry and `/ticket-repos setup` creates the branches.
+
 Neither repo has a git remote, which also tests `/ticket-init` on local-only repos. `/pr-describe` and `/resolve-review` need a GitHub PR, so they're optional. See step 9.
 
 ## 1. Setup — `/ticket-init`
 ```bash
-cd ~ && claude
+cd $AWF_TICKETS_ROOT && claude     # the tickets folder, not ~, so Claude's scope stays small
 ```
-`/ticket-init TODO-1 todo-lists`, then paste the ticket from `examples/TODO-1-ticket.md` and give both repo paths.
+`/ticket-init TODO-1 todo-lists`. When it asks for the ticket, either:
+- paste it into the Claude Code prompt (copy it first with `sed '1,/^---$/d' $AWF_KIT/examples/TODO-1-ticket.md | pbcopy`), or
+- give the file path: `~/dev-utilities/ai-dev-workflow/examples/TODO-1-ticket.md`
+
+Then give both repo paths: `~/dev-utilities/sample-app/todo-list` and `~/dev-utilities/sample-app/todo-e2e`.
 
 **Check:**
 - [ ] `ticket.md` has AC1–AC6
@@ -71,7 +77,7 @@ Try `/e2e-plan "happy path, validation and overdue only"` to check your coverage
 **Check, per task:**
 - [ ] Failing spec written first and run
 - [ ] RuboCop hook feedback appeared on any offense
-- [ ] `task-reviewer` ran in a fresh context with real findings
+- [ ] `task-reviewer` ran in a fresh context with real findings, saved to `reviews/T#.md`, and `tasks.md` **Review** filled in
 - [ ] Stopped for approval; commit staged only the task's files
 - [ ] Specs hook ran on commit (try a deliberately failing spec once, to see it block)
 - [ ] `tasks.md` updated with status and SHA

@@ -46,7 +46,7 @@ Report each hit and fix it. Hits inside screenshot file names (`<KEY>_TP-01.png`
 
 ## Step 3 — Evidence (evidence mode only)
 
-1. **Check the local stack is up** at the base URL in `e2e-plan.md`. If it isn't, stop and ask me to start it.
+1. **Check the local stack matches the ticket**, as in `/ticket-repos status`: `change` and `e2e` repos on the ticket branch, `run` repos on their expected branch and up to date, and the base URL in `e2e-plan.md` reachable. Evidence from the wrong code is worse than none. If anything is off, stop and tell me what to fix.
 2. **Capture screenshots without changing the shared test suite unless I agree.**
    - If the Playwright repo's `CLAUDE.md` or helpers define an evidence or screenshot mechanism, use it.
    - Otherwise, propose how to capture at each test item's evidence point. For example, `page.screenshot()` calls gated by an env var such as `EVIDENCE_DIR`, so normal runs produce nothing. Use names from the TP IDs. **Wait for my approval before adding anything to the Playwright repo.**

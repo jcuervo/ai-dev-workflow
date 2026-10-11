@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Build or extend the repo registry by scanning a parent folder for git repos.
+# Existing entries are kept as they are (so your edited descriptions survive);
+# only repos not yet listed are appended.
+#   bin/awf-repos-scan [parent-folder]     (default: $AWF_REPOS_ROOT)
+set -euo pipefail
+root="${1:-${AWF_REPOS_ROOT:-}}"
+[ -n "$root" ] || { echo "Usage: $0 <folder containing your repos>   (or set AWF_REPOS_ROOT)" >&2; exit 1; }
+root="$(cd "$root" && pwd -P)"
+file="${AWF_REPOS_FILE:-$HOME/.config/ai-dev-workflow/repos.yml}"
+mkdir -p "$(dirname "$file")"
+
+if [ ! -f "$file" ]; then
+  printf '# ai-dev-workflow repo registry (machine-specific). Edit the descriptions.\n# Format: see config/repos.example.yml in the kit.\n\nroot: %s\nrepos:\n' "$root" > "$file"
+fi
+
+describe() {  # first meaningful line of CLAUDE.md or README
+  local d="$1" f line
+  for f in CLAUDE.md README.md README.rdoc README; do
+    [ -f "$d/$f" ] || continue
+    line="$(grep -vE '^\s*($|#|<|!\[|\[!|---|=+$|-+$)' "$d/$f" | head -1 | sed 's/"/'"'"'/g' | cut -c1-140 || true)"
+    [ -n "$line" ] && { printf '%s' "$line"; return; }
+  done
+  printf 'TODO: describe what this service owns'
+}
+
+added=0
+for gitdir in "$root"/*/.git; do
+  [ -e "$gitdir" ] || continue
+  d="$(dirname "$gitdir")"; name="$(basename "$d")"
+  grep -qE "^  - name: ${name}\$" "$file" && continue
+  def="$(git -C "$d" symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##' || true)"
+  if [ -z "$def" ]; then
+    for b in main master develop; do git -C "$d" show-ref --verify -q "refs/heads/$b" && { def="$b"; break; }; done
+  fi
+  kind=service
+  ls "$d"/playwright.config.* >/dev/null 2>&1 && kind=e2e
+  runs=local
+  for f in "$d"/docker-compose*.yml "$d"/docker-compose*.yaml "$d"/compose*.yml "$d"/compose*.yaml; do
+    [ -e "$f" ] && { runs=docker; break; }
+  done
+  [ "$kind" = e2e ] && runs=local
+  cat >> "$file" <<YML
+
+  - name: $name
+    path: $d
+    default_branch: ${def:-main}
+    kind: $kind
+    runs_in: $runs
+    description: "$(describe "$d")"
+YML
+  added=$((added+1)); echo "  added $name ($kind, $runs)"
+done
+echo "Registry: $file ($added added). Review kind/runs_in and edit the descriptions."

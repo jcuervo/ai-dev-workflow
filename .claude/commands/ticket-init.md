@@ -1,11 +1,15 @@
 ---
-description: Set up a ticket folder — pull or paste the Jira ticket, then create branches and worktrees in every affected repo
+description: Set up a ticket folder — pull or paste the Jira ticket, number the ACs, and propose candidate repos from the registry (branches come later, via /ticket-repos)
 argument-hint: "<JIRA-KEY> [short-description]"
 ---
 
 # Initialise a ticket
 
+Run this from `$AWF_TICKETS_ROOT`, or anywhere except the home folder. Every later command runs from the ticket folder this creates.
+
 Arguments: `$ARGUMENTS`. The Jira key (required) and an optional short description for the branch name.
+
+**This command creates no branches.** Which repos are really affected is settled by `/analyze-ticket`; `/ticket-repos` then creates the branches.
 
 ## Step 1 — Folder
 
@@ -16,32 +20,26 @@ Arguments: `$ARGUMENTS`. The Jira key (required) and an optional short descripti
 ## Step 2 — Ticket content
 
 - If a Jira or Atlassian tool is available, fetch the ticket by key: summary, description, acceptance criteria, attachments, links.
-- Otherwise ask me to paste the ticket.
+- Otherwise ask me to paste the ticket **or give a file path** to read it from (e.g. a ticket saved from Jira). If the file has a note above a `---` line, use only what's below it.
 
-Write `ticket.md` from `$AWF_KIT/templates/ticket.md`:
+Write `ticket.md` from `$AWF_KIT/templates/ticket.md`. Replace the placeholders, and drop the template's guidance comments:
 - Keep the description and requirements **verbatim**.
 - Number the acceptance criteria **AC1, AC2…** in the ticket's order. If the ticket's ACs aren't clearly separated, split them sensibly and tell me how you numbered them, since these IDs are used everywhere after this.
+- Branch name: `<KEY>-<short-description>`, lowercase with hyphens. Derive the description from the ticket title if I didn't give one.
+- Mode: `$AWF_BRANCH_MODE` (default `branch`).
 
-## Step 3 — Repos
+## Step 3 — Candidate repos
 
-Ask me which repos are affected, including the Playwright repo if e2e tests apply, and where each lives locally. Then propose:
-- **Branch name:** `<KEY>-<short-description>`, lowercase with hyphens, the same in every repo. Derive the description from the ticket title if I didn't give one.
-- **Base:** each repo's default branch.
-  - With a remote: `git -C <repo> symbolic-ref refs/remotes/origin/HEAD`, and base the branch on `origin/<default>`.
-  - **No remote** (`git -C <repo> remote` prints nothing): use the local default branch (`main`, else `master`), and skip the fetch.
-  - If the repo has **no commits yet**, stop and tell me; a worktree needs a commit to branch from.
-
-Show the plan and **wait for approval**. Then, for each repo:
-```bash
-git -C <repo path> fetch origin                     # only if the repo has a remote
-git -C <repo path> worktree add <ticket folder>/repos/<repo name> -b <branch> <base>
-```
-`<base>` is `origin/<default>` with a remote, or the local default branch without one.
-If the branch already exists, use it instead of creating it, and tell me.
-
-Fill in the **Affected repos** table in `ticket.md`.
+1. Read the repo registry: `$AWF_REPOS_FILE` (default `~/.config/ai-dev-workflow/repos.yml`).
+   - If it doesn't exist, tell me to run `$AWF_KIT/bin/awf-repos-scan <folder with my repos>`, and ask me to name the candidate repos and their paths for now.
+2. From the ticket and the registry descriptions, propose **candidates** with a tentative role and a one-line reason each:
+   - `change`: likely needs code changes
+   - `e2e`: the Playwright repo (registry `kind: e2e`), if the ticket has user-visible behaviour
+   - `run`: likely needs to be running for the flow to work or be checked, without changes
+   - `reference`: worth reading for context only
+3. Show the list and let me add, remove or re-role repos. Then fill in the **Affected repos** table, marking it `candidates — confirmed by /analyze-ticket`, with an empty Branch column.
 
 ## Step 4 — Hand over
 
-Tell me in a few lines: the folder path, the number of ACs, repos and branches created, and the next step:
+Tell me in a few lines: the folder path, the number of ACs, the candidate repos, and the next step:
 `cd <ticket folder> && claude`, then `/analyze-ticket`.

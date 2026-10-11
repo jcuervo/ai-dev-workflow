@@ -19,7 +19,7 @@ Nothing is changed on GitHub until I approve it.
 2. If you're in a ticket folder, read `ticket.md`, `plan.md` (the sections for this repo), `tasks.md` (this repo's tasks), `notes.md` and `e2e-plan.md` if present.
 3. Read the change itself: `git log --oneline <base>..HEAD` and `git diff <base>...HEAD --stat`, then the diff for the files that matter.
 4. **Template choice:** if the repo has `.github/pull_request_template.md` (or `docs/` or root, or a `PULL_REQUEST_TEMPLATE/` folder), use it as the base and fill its sections first. Then add sections from `$AWF_KIT/templates/pr-description.md` that it lacks: at minimum Acceptance criteria, Test results, Risk and rollout, and Revisions. Otherwise use our template.
-5. **Related PRs:** find the other PRs for this ticket in the other repos under `repos/`, including the Playwright repo, with `gh pr list --head <branch> --json number,url` in each repo.
+5. **Related PRs:** find the other PRs for this ticket in the other `change` and `e2e` repos (roles in `ticket.md`), including the Playwright repo, with `gh pr list --head <branch> --json number,url` in each repo.
 
 ## Step 2 — Run the checks (for Test results)
 

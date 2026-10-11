@@ -11,6 +11,7 @@
 - **Categories:** `contract` · `migration` · `backend` · `frontend` · `job` · `config` · `test` · `e2e` · `docs`
 - **Out-of-scope discoveries** become new tasks at the end; they don't get folded into the current task.
 - **E2E tasks** live in the Playwright repo, depend on the feature tasks they cover, and use the scenarios in `e2e-plan.md`.
+- **Every task is reviewed** by the independent `task-reviewer` before its commit; the review is saved to `reviews/T#.md`, and a commit hook enforces it.
 - **Commit format:** `[{{KEY}}][T#] <summary>`
 
 ## Summary
@@ -30,6 +31,7 @@
 - **Specs:** {{spec/path_spec.rb (new | existing)}}
 - **Scope:** {{one to three sentences on what this task changes and what it doesn't}}
 - **Done when:** {{specific observable outcome beyond specs passing, if any}}
+- **Review:** {{filled in by /build-task: verdict · reviews/T#.md}}
 - **Commits:** {{filled in by /build-task: short SHAs}}
 - **Notes:** {{filled in during build: deviations, follow-ups}}
 

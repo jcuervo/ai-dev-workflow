@@ -1,0 +1,27 @@
+# ai-dev-workflow repo registry: one entry per service repo on this machine.
+# Machine-specific, so it lives outside the kit (default: ~/.config/ai-dev-workflow/repos.yml).
+# Generate it with `bin/awf-repos-scan`, then edit the descriptions: they're how
+# /ticket-init and /analyze-ticket work out which repos a ticket touches.
+
+root: /Users/you/work/repos
+repos:
+  - name: billing-service
+    path: /Users/you/work/repos/billing-service
+    default_branch: main
+    kind: service          # service | e2e | library | other
+    runs_in: docker        # docker | local | none
+    description: "Invoices, payments and refunds. Owns the /refunds API and the refund.* events."
+
+  - name: orders-service
+    path: /Users/you/work/repos/orders-service
+    default_branch: main
+    kind: service
+    runs_in: docker
+    description: "Orders and checkout. Consumes refund.* events to update order status."
+
+  - name: e2e-tests
+    path: /Users/you/work/repos/e2e-tests
+    default_branch: main
+    kind: e2e
+    runs_in: local
+    description: "Playwright end-to-end tests for the whole platform."
