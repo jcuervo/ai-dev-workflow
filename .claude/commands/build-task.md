@@ -45,7 +45,7 @@ If the task's category is `e2e`, it's in the Playwright repo and these rules **r
 - Read the task's scenarios in `e2e-plan.md`. Build exactly those, and don't add scenarios I didn't approve.
 - **Write the spec, then run it locally.** Playwright runs only against the local stack on the ticket branches.
   1. **Check the stack matches the ticket**, as in `/ticket-repos status`: every `change` and `e2e` repo is on the ticket branch, and every `run` repo is on its expected branch and not behind its remote. Then check the base URL from `e2e-plan.md` is reachable. If anything is off, **stop and tell me what to fix**: switch a repo, pull it, restart or rebuild a Docker service, or run migrations. Don't run Docker commands or start servers unless I ask.
-  2. Run only this task's specs, using the repo's own command.
+  2. Run only this task's specs with the repo's own command, on **one** browser project (e.g. `--project=chromium`) unless the e2e plan says otherwise. Use `--grep` with the ticket tag, or the spec path. Never run the whole suite for one task.
   3. Run them a second time to catch flakiness.
 - **If a test fails, triage before fixing:**
   - **Test bug** (wrong selector, timing, bad data): fix the test.

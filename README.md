@@ -7,6 +7,7 @@ A personal toolkit of Claude Code slash commands, agents, hooks and templates fo
 | Path | Purpose |
 |---|---|
 | `docs/execution-flow.md` | **What to run, when:** the step-by-step runbook from new ticket to merged PRs, with a flow diagram and a cheat sheet |
+| `docs/e2e-speed.md` | Why Playwright suites get slow, how the kit keeps new tests fast, `/e2e-audit`, and day-to-day commands for running less |
 | `docs/models.md` | Which model and effort each command uses (Opus to think, Sonnet to do, Haiku to look), and how to save tokens |
 | `docs/setup-and-next-steps.md` | **Start here.** Install checklist per machine, things to remember, first-use validation, what's left to build |
 | `examples/dry-run.md` | Rehearsal of the full workflow on the sample todo app, with what to check at each step |
@@ -126,6 +127,7 @@ Step-by-step runbook: [`docs/execution-flow.md`](docs/execution-flow.md) · rule
 | 9 | Ship | `/ticket-ship [check]` | Definition of Done check, then pushes every repo and creates all the PRs/MRs, linked to each other in deploy order. `check` stops after the DoD report | drafting |
 | 9 | One PR | `/pr-describe [repo \| PR] [--refresh]` | Writes one PR/MR's title and description with real test results. `--refresh` updates only what changed | drafting |
 | 10 | Review feedback | `/resolve-review [PR]` | Triages reviewer comments, fixes, verifies, pushes, drafts replies and refreshes the description, with your approval at each step | drafting |
+| — | E2E suite (run inside the Playwright repo) | `/e2e-audit [--run]` | Read-only audit of the existing Playwright suite: slowest tests, overlap and redundancy, slow patterns, and a prioritized speed-up plan | drafting |
 | — | Any time | `/ticket-status` | One screen: tasks and reviews, AC coverage, branches, PR status, and the next action | drafting |
 
 **At the approval step of `/build-task`**, reply with:

@@ -38,9 +38,16 @@ Use `$AWF_KIT/templates/e2e-plan.md`. Fill in:
 2. **Environment and data:** the target is the **local stack**. List every repo that must be running (the `change` and `run` repos from `ticket.md`) with the branch it must be on. Include the base URL and how to start it, from the Playwright repo's `CLAUDE.md`. Also list flags, users and roles, seed data, and cleanup.
 3. **Selectors the app must provide:** prefer roles and accessible names, per the repo's guidelines. For each `data-testid` needed, name the feature task that will add it.
 4. **Scenarios:** one per user flow, each with the ACs covered, tags (using the repo's tag conventions), preconditions, steps, expected results and target spec file path. Reuse existing page objects and fixtures where they exist and name them.
-5. **Test items:** give each scenario one or more TP IDs (sequential: TP-01, TP-02…), each with a plain-language check and an **evidence point**, the moment a screenshot proves it. These become the rows of the stakeholder test plan (`/test-plan`). Never renumber existing IDs.
-6. **Manual test items:** ACs the BA/PO will want evidence for that aren't automated. Give them TP IDs too.
-7. **Out of scope** and **Risks** (flaky areas: async jobs, emails, third-party sandboxes)
+5. **Keep the tests fast.** E2E runs are slow, so design for speed:
+   - **Set up data through the API or seeds, not the UI.** Click through the UI only for the behaviour under test. Name the endpoint, factory or seed each scenario uses.
+   - **Reuse login state.** Use the repo's auth setup (`storageState`) if it has one. If it logs in through the UI in every test, note it as a follow-up; don't copy the pattern.
+   - **Independent, parallel-safe scenarios:** unique data per test, and no reliance on order or on another test's data.
+   - **One scenario per behaviour, not one long journey.** Short tests fail clearly and run in parallel.
+   - **Reuse existing tests:** if an existing spec already covers part of a flow, extend it, or say why a new one is needed. Don't duplicate coverage.
+   - **Tags** per the repo's conventions, so the ticket's tests can be run alone (`--grep`).
+6. **Test items:** give each scenario one or more TP IDs (sequential: TP-01, TP-02…), each with a plain-language check and an **evidence point**, the moment a screenshot proves it. These become the rows of the stakeholder test plan (`/test-plan`). Never renumber existing IDs.
+7. **Manual test items:** ACs the BA/PO will want evidence for that aren't automated. Give them TP IDs too.
+8. **Out of scope** and **Risks** (flaky areas: async jobs, emails, third-party sandboxes)
 
 ## Step 4 — Prepare the task changes (don't write them yet)
 

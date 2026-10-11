@@ -3,6 +3,7 @@
 What changed in the kit and why. Newest first.
 
 ## 2026-10-11
+- **E2E speed:** new `/e2e-audit` (read-only audit of an existing Playwright suite: timings, waste, overlap, prioritized plan) and `docs/e2e-speed.md`. `/e2e-plan` designs for speed (API or seed setup, reused login state, short independent tests, no duplicated coverage, tags); `/build-task` runs only the task's specs on one browser; `task-reviewer` flags slow e2e patterns.
 - **Commit format:** `PROJ-123: <summary>` (key, colon, space) instead of `[PROJ-123] <summary>`. The review gate recognises both. PR titles use the same `PROJ-123: <summary>` format.
 - **Model tiers:** every command and agent sets `model` and `effort` in its frontmatter. Opus for `/analyze-ticket`, `/plan-ticket` and `task-reviewer`; Haiku for `/ticket-status`; Sonnet for the rest, including `/build-task` (cheap builder, strong reviewer). New `docs/models.md` covers the tiers, the per-turn override behaviour, recommending a Sonnet session as the default, and token-saving habits.
 - **`docs/execution-flow.md`:** a runbook with a flow diagram, each step's command and where to run it, what you get and what you do, situations along the way, and a cheat sheet. README quick reference rewritten (numbered steps, run locations, status legend, all six hooks).

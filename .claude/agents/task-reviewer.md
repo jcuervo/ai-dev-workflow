@@ -71,6 +71,7 @@ Apply the Playwright repo's `CLAUDE.md` and guidelines first. Also check:
 - Existing page objects and fixtures reused rather than duplicated
 - Assertions check the outcome the AC describes, not just that a page loaded
 - Tags follow the repo's conventions
+- **Speed:** data set up through the API or seeds rather than clicking through the UI; login state reused, not repeated per test; no fixed waits; no duplicate of an existing test's coverage
 
 ## Output
 

@@ -24,7 +24,9 @@ Not every AC needs an e2e test. Use e2e for user-visible flows across pages or s
 - **How to start it:** {{from the Playwright repo's CLAUDE.md}}
 - **Feature flags:** {{flag: state needed}}
 - **Users / roles:** {{fixtures or accounts used}}
-- **Seed / setup data:** {{what must exist, and how it's created: API, factory, fixture}}
+- **Seed / setup data:** {{what must exist, and how it's created. Prefer API, factory or seed over clicking through the UI}}
+- **Auth:** {{storageState from the repo's setup project / none needed / UI login, flagged as a follow-up}}
+- **Run this ticket's tests:** {{e.g. npx playwright test --grep @PROJ-123 --project=chromium}}
 - **Cleanup:** {{how test data is removed or isolated}}
 
 ## 3. Selectors the app must provide
