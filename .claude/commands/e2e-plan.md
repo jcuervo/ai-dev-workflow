@@ -1,6 +1,8 @@
 ---
 description: Write the Playwright test plan for this ticket (coverage, scenarios, data, selectors) and add e2e tasks to tasks.md
 argument-hint: "[coverage notes, e.g. \"refund happy path and partial refund only\"]"
+model: sonnet
+effort: high
 ---
 
 # Plan the e2e (Playwright) tests

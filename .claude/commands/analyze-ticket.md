@@ -1,6 +1,8 @@
 ---
 description: Analyse a ticket across its repos (parallel repo-explorer agents) and write analysis.md and open-questions.md for the BA/PO
 argument-hint: "[focus notes]"
+model: opus
+effort: high
 ---
 
 # Analyse the ticket

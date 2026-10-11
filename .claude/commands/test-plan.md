@@ -1,6 +1,8 @@
 ---
 description: Produce the stakeholder test plan from e2e-plan.md — sanitized for the BA/PO, with screenshots captured per test item, ready to post to Jira, Linear, Azure Boards or any tracker
 argument-hint: "[draft | evidence] [markdown | jira | html]"
+model: sonnet
+effort: medium
 ---
 
 # Test plan (stakeholder version)

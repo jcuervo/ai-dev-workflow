@@ -7,6 +7,7 @@ A personal toolkit of Claude Code slash commands, agents, hooks and templates fo
 | Path | Purpose |
 |---|---|
 | `docs/execution-flow.md` | **What to run, when:** the step-by-step runbook from new ticket to merged PRs, with a flow diagram and a cheat sheet |
+| `docs/models.md` | Which model and effort each command uses (Opus to think, Sonnet to do, Haiku to look), and how to save tokens |
 | `docs/setup-and-next-steps.md` | **Start here.** Install checklist per machine, things to remember, first-use validation, what's left to build |
 | `examples/dry-run.md` | Rehearsal of the full workflow on the sample todo app, with what to check at each step |
 | `docs/workflow.md` | The working procedure: phases, gates, artifacts, conventions |
@@ -134,7 +135,9 @@ Step-by-step runbook: [`docs/execution-flow.md`](docs/execution-flow.md) · rule
 
 After each task: `/clear`, then `/build-task next`.
 
-**Agents:** `task-reviewer` (independent, read-only reviewer with a fresh context) and `repo-explorer` (read-only, one per repo in parallel, returns a summary). Both in use.
+**Agents:** `task-reviewer` (independent, read-only reviewer with a fresh context, on Opus) and `repo-explorer` (read-only, one per repo in parallel, returns a summary, on Sonnet). Both in use.
+
+**Models:** each command sets its own model and effort: Opus for analysis, planning and review, Sonnet for building and procedures, Haiku for status. Run your session on Sonnet for the most economical setup. See [`docs/models.md`](docs/models.md).
 
 **Hooks** (drafting): protected files · RuboCop on edit · no AI attribution in commit messages · mandatory review before a task commit · related specs pass · security scan. Details in [`hooks/README.md`](hooks/README.md).
 

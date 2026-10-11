@@ -1,6 +1,7 @@
 ---
 description: Run an independent review of one task's changes against its ACs and scope, without changing code
 argument-hint: "[T#]"
+model: inherit
 ---
 
 # Review one task

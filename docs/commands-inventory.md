@@ -74,6 +74,7 @@ Priority: **P1** build first (core loop) · **P2** next · **P3** later or nice-
 
 | Doc | Purpose |
 |---|---|
+| `docs/models.md` | Model and effort tier per command and agent, override behaviour, session-model strategy, token-saving habits |
 | `docs/code-hosts.md` | Host detection (GitHub, GitLab, Azure DevOps, other), CLI commands per operation, manual mode, and which account is used |
 
 ## Scripts

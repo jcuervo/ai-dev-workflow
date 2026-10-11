@@ -1,6 +1,8 @@
 ---
 description: Set up a ticket folder — pull or paste the Jira ticket, number the ACs, and propose candidate repos from the registry (branches come later, via /ticket-repos)
 argument-hint: "<JIRA-KEY> [short-description]"
+model: sonnet
+effort: medium
 ---
 
 # Initialise a ticket

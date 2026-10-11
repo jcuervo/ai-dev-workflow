@@ -1,6 +1,8 @@
 ---
 description: Write or refresh a PR/MR title and description from the standard template, with real test results — shown for approval before updating GitHub, GitLab or Azure DevOps (or written to a file to paste)
 argument-hint: "[repo | PR number] [--refresh]"
+model: sonnet
+effort: medium
 ---
 
 # PR description

@@ -1,6 +1,8 @@
 ---
 description: Work through a PR/MR's review comments (GitHub, GitLab, Azure DevOps, or pasted) — triage, fix, verify, push, reply and refresh the description, with approval at each gate
 argument-hint: "[PR number | URL]"
+model: sonnet
+effort: high
 ---
 
 # Resolve PR review

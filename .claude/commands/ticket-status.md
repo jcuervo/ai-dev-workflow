@@ -1,6 +1,8 @@
 ---
 description: One-screen status of the whole ticket — tasks, reviews, AC coverage, repos and branches, and PR/MR review state across all repos. Read-only.
 argument-hint: ""
+model: haiku
+effort: low
 ---
 
 # Ticket status

@@ -1,6 +1,8 @@
 ---
 description: Ship the ticket — Definition of Done check, sync with the default branch, push every change/e2e repo, create or update all PRs/MRs with cross-links and deploy order, then mark them ready. Approval at each gate.
 argument-hint: "[check]"
+model: sonnet
+effort: medium
 ---
 
 # Ship the ticket

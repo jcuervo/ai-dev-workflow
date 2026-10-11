@@ -1,6 +1,8 @@
 ---
 description: Turn a ready analysis into plan.md and a prioritised, categorised tasks.md — proposed in chat first, written after approval
 argument-hint: "[planning notes]"
+model: opus
+effort: high
 ---
 
 # Plan the ticket

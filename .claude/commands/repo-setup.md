@@ -1,6 +1,8 @@
 ---
 description: Prepare a service repo for the kit — audit its existing CLAUDE.md/AGENTS.md (or draft one if none), fill only the gaps in a personal CLAUDE.local.md without touching team files, and record its spec/lint commands for the hooks
 argument-hint: "[repo name | path] [--update]"
+model: sonnet
+effort: high
 ---
 
 # Repo setup

@@ -1,6 +1,8 @@
 ---
 description: Build one task from tasks.md — specs first, implement, verify, independent review, then stop for approval before committing
 argument-hint: "[T# | next]"
+model: sonnet
+effort: high
 ---
 
 # Build one task

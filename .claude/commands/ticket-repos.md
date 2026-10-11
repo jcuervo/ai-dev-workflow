@@ -1,6 +1,8 @@
 ---
 description: Create or check the ticket's branches across all involved repos (branch or worktree mode), add a repo later, bring branches up to date with the default branch, or release the clones when done
 argument-hint: "[setup | add <repo> [role] | status | sync | release]"
+model: sonnet
+effort: medium
 ---
 
 # Ticket repos

@@ -1,6 +1,8 @@
 ---
 description: Apply the BA/PO's answers to the analysis as a delta — update only affected sections and log the change
 argument-hint: ""
+model: sonnet
+effort: medium
 ---
 
 # Update the analysis
