@@ -6,6 +6,7 @@ A personal toolkit of Claude Code slash commands, agents, hooks and templates fo
 
 | Path | Purpose |
 |---|---|
+| `docs/execution-flow.md` | **What to run, when:** the step-by-step runbook from new ticket to merged PRs, with a flow diagram and a cheat sheet |
 | `docs/setup-and-next-steps.md` | **Start here.** Install checklist per machine, things to remember, first-use validation, what's left to build |
 | `examples/dry-run.md` | Rehearsal of the full workflow on the sample todo app, with what to check at each step |
 | `docs/workflow.md` | The working procedure: phases, gates, artifacts, conventions |
@@ -105,7 +106,7 @@ The full per-machine checklist is in [`docs/setup-and-next-steps.md`](docs/setup
 
 ## Quick reference
 
-Full procedure: [`docs/workflow.md`](docs/workflow.md). Commands run from the **ticket folder** (`~/work/tickets/<KEY>/`) unless the table says otherwise. Each repo the ticket touches is reachable there as `repos/<name>`.
+Step-by-step runbook: [`docs/execution-flow.md`](docs/execution-flow.md) · rules and reasons: [`docs/workflow.md`](docs/workflow.md). Commands run from the **ticket folder** (`~/work/tickets/<KEY>/`) unless the table says otherwise. Each repo the ticket touches is reachable there as `repos/<name>`.
 
 **Status:** **in use** means validated end to end in the dry run · **drafting** means built but not yet proven on real work.
 

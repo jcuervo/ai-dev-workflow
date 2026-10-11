@@ -1,5 +1,7 @@
 # Workflow: Ticket → Merged PRs
 
+For the step-by-step "what to type when", see [`execution-flow.md`](execution-flow.md). This document holds the rules and the reasons.
+
 The working procedure for taking one ticket through Claude Code across one or more service repos. Commands referenced here are listed in [`commands-inventory.md`](commands-inventory.md).
 
 > This is a living document. When the procedure changes, update this file and add a line to `CHANGELOG.md`.
