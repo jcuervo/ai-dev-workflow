@@ -105,36 +105,41 @@ The full per-machine checklist is in [`docs/setup-and-next-steps.md`](docs/setup
 
 ## Quick reference
 
-Run commands from the **ticket folder root** (e.g. `~/work/tickets/PROJ-123/`), with repo worktrees under `repos/`. Full procedure: [`docs/workflow.md`](docs/workflow.md).
+Full procedure: [`docs/workflow.md`](docs/workflow.md). Commands run from the **ticket folder** (`~/work/tickets/<KEY>/`) unless the table says otherwise. Each repo the ticket touches is reachable there as `repos/<name>`.
 
-| Phase | Command | What it does | Status |
-|---|---|---|---|
-| Once per repo | `/repo-setup [repo] [--update]` | Audits the repo's existing `CLAUDE.md`/`AGENTS.md` and fills only the gaps in a personal `CLAUDE.local.md` (or drafts a `CLAUDE.md` if there's none); records spec/lint commands for the hooks | drafting |
-| Setup | `/ticket-init <KEY> [desc]` | Creates the ticket folder and `ticket.md` with numbered ACs; proposes candidate repos from the registry | in use |
-| Analysis | `/analyze-ticket [notes]` | Parallel repo exploration, then `analysis.md`, `open-questions.md`, confirmed repos and roles, and paste-ready questions | in use |
-| Clarify | `/update-analysis` | Applies the BA/PO's answers as a delta; mid-build, proposes the task and plan delta | in use |
-| Branches | `/ticket-repos [setup \| add \| status \| sync \| release]` | Ticket branch in every `change`/`e2e` repo; `run` repos on latest default; stack check; sync with default; switch back when done | drafting |
-| Plan | `/plan-ticket [notes]` | Proposes the plan and task breakdown in chat, then writes `plan.md` and `tasks.md` on approval | in use |
-| Plan | `/e2e-plan [coverage notes]` | Playwright test plan with TP IDs, plus e2e tasks; you decide coverage | in use |
-| Build | `/build-task [T# \| next]` | One task (app or Playwright): specs first, implement, verify, review loop, then stops for approval before committing | in use |
-| Build | `/review-task [T#]` | Independent read-only review of one task, saved to `reviews/T#.md`; also retroactive | in use |
-| Any time | `/ticket-status` | One screen: tasks, reviews, AC coverage, branches, PR state, next action | drafting |
-| Evidence | `/test-plan [draft \| evidence] [format]` | Stakeholder test plan for the ticket (Markdown, Jira markup or HTML), sanitized; `evidence` captures one screenshot per test item | drafting |
-| Ship | `/ticket-ship [check]` | Definition of Done, sync check, push all repos, all PRs/MRs cross-linked in deploy order, mark ready | drafting |
-| Ship | `/pr-describe [repo\|PR] [--refresh]` | One PR/MR's title and description with real test results; `--refresh` updates only what changed | drafting |
-| Review | `/resolve-review [PR]` | Triage, fix, verify, push, reply, then refresh the description, with approval at each gate | drafting |
+**Status:** **in use** means validated end to end in the dry run · **drafting** means built but not yet proven on real work.
 
-At the approval step of `/build-task`, reply with:
+| # | Step | Command | What it does | Status |
+|---|---|---|---|---|
+| 0 | Repo setup (once per repo, run inside the repo) | `/repo-setup [repo] [--update]` | Checks the repo's existing `CLAUDE.md` / `AGENTS.md` against the actual code and adds only what's missing to your personal `CLAUDE.local.md`; drafts a `CLAUDE.md` if there's none. Saves the repo's spec and lint commands for the hooks | drafting |
+| 1 | Start (run from `~/work/tickets`) | `/ticket-init <KEY> [desc]` | Creates the ticket folder and `ticket.md` with numbered ACs, and suggests which repos are involved | in use |
+| 2 | Analyse | `/analyze-ticket [notes]` | Explores the repos in parallel; writes `analysis.md`, `open-questions.md` and a paste-ready question list; confirms each repo's role | in use |
+| 3 | Clarify | `/update-analysis` | Applies the BA/PO's answers as a delta. Mid-build, proposes the resulting task and plan changes | in use |
+| 4 | Branches | `/ticket-repos [setup \| add \| status \| sync \| release]` | Creates the ticket branch in every repo being changed, puts repos that only need to run on their latest main, checks the local stack, syncs with main, and switches back when done | drafting |
+| 5 | Plan | `/plan-ticket [notes]` | Proposes the plan and tasks in chat, then writes `plan.md` and `tasks.md` once you approve | in use |
+| 6 | E2E plan | `/e2e-plan [coverage notes]` | Playwright test plan with test-item IDs (TP-01…), plus the e2e tasks. You decide the coverage | in use |
+| 7 | Build | `/build-task [T# \| next]` | Builds one task (app or Playwright): specs first, implement, verify, review loop, then waits for your approval before committing | in use |
+| 7 | Review one task | `/review-task [T#]` | Independent, read-only review of a task, saved to `reviews/T#.md`. Also works on finished tasks | in use |
+| 8 | Evidence | `/test-plan [draft \| evidence] [format]` | Stakeholder test plan in plain language (Markdown, Jira markup or HTML). `evidence` runs the e2e tests and captures one screenshot per test item | drafting |
+| 9 | Ship | `/ticket-ship [check]` | Definition of Done check, then pushes every repo and creates all the PRs/MRs, linked to each other in deploy order. `check` stops after the DoD report | drafting |
+| 9 | One PR | `/pr-describe [repo \| PR] [--refresh]` | Writes one PR/MR's title and description with real test results. `--refresh` updates only what changed | drafting |
+| 10 | Review feedback | `/resolve-review [PR]` | Triages reviewer comments, fixes, verifies, pushes, drafts replies and refreshes the description, with your approval at each step | drafting |
+| — | Any time | `/ticket-status` | One screen: tasks and reviews, AC coverage, branches, PR status, and the next action | drafting |
+
+**At the approval step of `/build-task`**, reply with:
 - `approve`: commit this task's files
-- `approve & push`: commit and push (creates a draft PR if there isn't one)
-- `changes: …`: adjust and come back to the approval step
+- `approve & push`: commit and push (opens a draft PR/MR if there isn't one)
+- `changes: …`: adjust, then come back to the approval step
 
 After each task: `/clear`, then `/build-task next`.
 
-**Agents:** `task-reviewer` (fresh-context, read-only reviewer) and `repo-explorer` (read-only, one per repo in parallel, returns a summary).
+**Agents:** `task-reviewer` (independent, read-only reviewer with a fresh context) and `repo-explorer` (read-only, one per repo in parallel, returns a summary). Both in use.
 
-**Hooks:** protected files, RuboCop on edit, specs and security checks before `git commit`. Details in [`hooks/README.md`](hooks/README.md).
+**Hooks** (drafting): protected files · RuboCop on edit · no AI attribution in commit messages · mandatory review before a task commit · related specs pass · security scan. Details in [`hooks/README.md`](hooks/README.md).
 
-**Templates:** `repo-CLAUDE.md` (per service repo, via `/repo-setup`); per ticket: `ticket.md`, `open-questions.md`, `analysis.md`, `plan.md`, `e2e-plan.md`, `test-plan.md`, `tasks.md`, `commit-message.md`, `pr-description.md`.
+**Templates:**
+- Per repo: `repo-CLAUDE.md`
+- Per ticket: `ticket.md`, `open-questions.md`, `analysis.md`, `plan.md`, `tasks.md`, `e2e-plan.md`, `test-plan.md`
+- Conventions: `commit-message.md`, `pr-description.md`
 
-The full list of planned commands, agents and hooks is in [`docs/commands-inventory.md`](docs/commands-inventory.md).
+Everything built and planned, with inputs, outputs and status: [`docs/commands-inventory.md`](docs/commands-inventory.md).
