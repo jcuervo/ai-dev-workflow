@@ -39,7 +39,7 @@ Record the short SHA the results are for. **Never report results you didn't get 
 
 ### New description
 Fill every section between `<!-- awf:… -->` markers:
-- **Title:** `[KEY] <imperative summary>`, specific enough to stand alone in `git log`
+- **Title:** `<KEY>: <imperative summary>` (same prefix as the commits), specific enough to stand alone in `git log`
 - **Summary:** what and why, readable without Jira
 - **Changes:** grouped by area, with reasons for non-obvious choices
 - **Acceptance criteria:** every AC this PR touches, mapped to specs or e2e specs

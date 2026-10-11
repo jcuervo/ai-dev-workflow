@@ -95,7 +95,7 @@ Priority: **P1** build first (core loop) · **P2** next · **P3** later or nice-
 | `tasks.md` (machine-friendly task format) | `/plan-ticket`, `/build-task` | P1 | in use |
 | `e2e-plan.md` (replaces the manual hand-over doc) | `/e2e-plan`, `/build-task` | P1 | in use |
 | `test-plan.md` (stakeholder test plan for the Jira comment) | `/test-plan` | P1 | drafting |
-| `commit-message.md`: `[KEY] <imperative summary>`, optional why-body, no task number, no trailers | `/build-task`, `/resolve-review` | P1 | drafting |
+| `commit-message.md`: `<KEY>: <imperative summary>`, optional why-body, no task number, no trailers | `/build-task`, `/resolve-review` | P1 | drafting |
 | `pr-description.md` (sections wrapped in `awf:` markers so `--refresh` can update them in place) | `/pr-describe` | P2 | drafting |
 | `repo-CLAUDE.md`: starter for service repos (stack, exact commands, conventions, integrations, gotchas) | `/repo-setup` | P2 | drafting |
 

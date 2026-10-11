@@ -1,8 +1,8 @@
 <!--
 PR description template for ai-dev-workflow.
 
-Title format:  [{{KEY}}] <imperative summary of what this PR does>
-               e.g. "[PROJ-123] Add refund webhook handler to billing service"
+Title format:  {{KEY}}: <imperative summary of what this PR does>
+               e.g. "PROJ-123: Add refund webhook handler to billing service"
 
 If the target repo has its own .github/pull_request_template.md, that template
 wins: fill in its sections first, then add any sections below that it lacks.

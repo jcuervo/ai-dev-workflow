@@ -3,6 +3,7 @@
 What changed in the kit and why. Newest first.
 
 ## 2026-10-11
+- **Commit format:** `PROJ-123: <summary>` (key, colon, space) instead of `[PROJ-123] <summary>`. The review gate recognises both. PR titles use the same `PROJ-123: <summary>` format.
 - **Model tiers:** every command and agent sets `model` and `effort` in its frontmatter. Opus for `/analyze-ticket`, `/plan-ticket` and `task-reviewer`; Haiku for `/ticket-status`; Sonnet for the rest, including `/build-task` (cheap builder, strong reviewer). New `docs/models.md` covers the tiers, the per-turn override behaviour, recommending a Sonnet session as the default, and token-saving habits.
 - **`docs/execution-flow.md`:** a runbook with a flow diagram, each step's command and where to run it, what you get and what you do, situations along the way, and a cheat sheet. README quick reference rewritten (numbered steps, run locations, status legend, all six hooks).
 - **Existing repo instructions respected:** `/repo-setup` audits a team-owned `CLAUDE.md` / `.claude/rules/` / `AGENTS.md` and never edits it. Gaps and labelled corrections go into a personal `CLAUDE.local.md` (excluded via `.git/info/exclude`; `@AGENTS.md` import when the repo only has `AGENTS.md`), with an optional team patch in `.git/`. All commands and agents now read every instruction file (`CLAUDE.md`, `CLAUDE.local.md`, `.claude/CLAUDE.md`, `.claude/rules/`, `AGENTS.md`).

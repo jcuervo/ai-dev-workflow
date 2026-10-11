@@ -196,7 +196,7 @@ There's one source and two outputs. `e2e-plan.md` is the internal plan. `test-pl
 - E2E tasks depend on the feature tasks they cover, so they're built last. They can also be built earlier against an agreed UI if the selectors are settled.
 
 Conventions:
-- Commit message: `[PROJ-123] Add refund webhook handler`, ticket key only (template: `templates/commit-message.md`). `tasks.md` records which commits belong to which task.
+- Commit message: `PROJ-123: Add refund webhook handler`, ticket key only (template: `templates/commit-message.md`). `tasks.md` records which commits belong to which task.
 - **Push per task to a draft PR** so CI runs early. Don't wait until the end.
 - Record any plan deviation in `notes.md`.
 - Use `/ticket-status` any time for one screen of everything: tasks and reviews, AC coverage, repos and branches, PR review state.
@@ -227,7 +227,7 @@ Run `/ticket-ship` (or `/ticket-ship check` for the Definition of Done report on
 ### PR description standard
 Template: [`templates/pr-description.md`](../templates/pr-description.md).
 
-- **Title:** `[KEY] <imperative summary>`, specific enough to stand alone in `git log`. Not "Fix bug" or "Phase 1".
+- **Title:** `<KEY>: <imperative summary>`, the same prefix as the commits, specific enough to stand alone in `git log`. Not "Fix bug" or "Phase 1".
 - **Sections:** Summary (what and why) · Related PRs and deploy order (including the Playwright PR) · Changes · Acceptance criteria → specs and e2e specs · Test results · How to test · Risk and rollout · Notes for reviewers · Revisions. No screenshots by team convention.
 - **Readable without the ticket.** Links can rot or be inaccessible to reviewers; the description should carry the essential context itself.
 - **Test results are a snapshot.** Always state the SHA. Put long output in a collapsed `<details>` block; link CI instead of pasting full logs.
@@ -240,7 +240,7 @@ Run `/resolve-review <pr>`, once per review round:
 1. **Pull** unresolved review threads, review summaries and general PR comments, including bot or Claude reviews, via `gh`.
 2. **Triage.** Each item becomes a table row: **fix** / **discuss** / **decline (with reason)** / **already addressed**. Related comments are grouped.
    **Gate:** you approve or adjust the triage before any code changes.
-3. **Fix** each fix item as a small commit in its own repo. Commit message format: `[KEY] Address review: <summary>`.
+3. **Fix** each fix item as a small commit in its own repo. Commit message format: `<KEY>: Address review: <summary>`.
 4. **Verify:** related specs, RuboCop and Brakeman.
 5. **Push.** **Gate:** you approve the push.
 6. **Draft replies,** one per thread: what changed and the fix SHA, or the reasoning for discuss and decline items.

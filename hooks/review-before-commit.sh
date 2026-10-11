@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # PreToolUse (Bash): the per-task review is mandatory.
-# For a ticket commit (message contains "[KEY]"), find that ticket's tasks.md and
+# For a ticket commit (message starts with "KEY:", e.g. "PROJ-123: Add …"), find that ticket's tasks.md and
 # require every task with status `in-progress` or `review` to have
 # reviews/T#.md whose last `Verdict:` line isn't "not ready".
 # Review-fix commits from /resolve-review ("Address review:") pass.
@@ -11,7 +11,9 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 
 detect_commit || exit 0
 cmd="$(input_get '.tool_input.command')"
-key="$(printf '%s' "$cmd" | grep -Eo '\[[A-Z][A-Z0-9]*-[0-9]+\]' | head -1 | tr -d '[]')"
+# Key: "PROJ-123:" right after the -m quote or at a line start (heredoc), or the legacy "[PROJ-123]"
+key="$(printf '%s' "$cmd" | grep -Eo "(^|[\"'[:space:]])[A-Z][A-Z0-9]*-[0-9]+:" | head -1 | grep -Eo '[A-Z][A-Z0-9]*-[0-9]+')"
+[ -z "$key" ] && key="$(printf '%s' "$cmd" | grep -Eo '\[[A-Z][A-Z0-9]*-[0-9]+\]' | head -1 | tr -d '[]')"
 [ -z "$key" ] && exit 0
 printf '%s' "$cmd" | grep -q 'Address review:' && exit 0
 

@@ -143,7 +143,7 @@ Checks:      rubocop ✓/✗ · brakeman ✓/✗/n.a.
 Review:      <final verdict> · <rounds> round(s), stopped: <converged | cap | not converging> · fixed: <…> · left: <…> · disputed: <… — your call> · saved: reviews/T#.md
 Deviations:  <from the plan, or "none">
 Follow-ups:  <proposed new tasks, or "none">
-Commit msg:  [<KEY>] <imperative summary>   (format: $AWF_KIT/templates/commit-message.md)
+Commit msg:  <KEY>: <imperative summary>   (format: $AWF_KIT/templates/commit-message.md)
 ```
 
 Reply with one of:
@@ -154,7 +154,7 @@ Reply with one of:
 ## Step 8 — On approval
 
 1. Stage **only this task's files** by explicit path. Never use `git add -A` or `git add .`. Confirm with `git status` that nothing unrelated is staged.
-2. Commit with the agreed message, following `$AWF_KIT/templates/commit-message.md`: `[<KEY>] <imperative summary>`, an optional body explaining why, **no task number**, and no `Co-Authored-By` or other trailers. The commit is authored by the configured git user. Keep T#'s status `review` until the commit succeeds; the commit gate uses it to find the review.
+2. Commit with the agreed message, following `$AWF_KIT/templates/commit-message.md`: `<KEY>: <imperative summary>`, an optional body explaining why, **no task number**, and no `Co-Authored-By` or other trailers. The commit is authored by the configured git user. Keep T#'s status `review` until the commit succeeds; the commit gate uses it to find the review.
 3. If I said **approve & push**: push the branch. If there's no PR/MR for this branch yet, create a **draft** with the code host's CLI (`$AWF_KIT/docs/code-hosts.md`; e.g. `gh pr create --draft`), using a minimal placeholder body. `/pr-describe` fills it in later. With no usable CLI, just push and tell me to open the draft by hand.
 4. In `tasks.md`: set status to `done` in the section and the summary table, record the short SHA under **Commits**, and fill in **Review** with the verdict and `reviews/T#.md`.
 5. Add any deviations to `notes.md` (create it if needed), prefixed with the task ID and date.

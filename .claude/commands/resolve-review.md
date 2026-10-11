@@ -57,7 +57,7 @@ For each approved **fix** (or group):
 1. Make the smallest change that addresses it, staying within this PR's scope. If a fix would grow the PR noticeably, stop and suggest a follow-up ticket instead.
 2. Add or adjust specs where behaviour changed.
 3. Commit separately, staging by explicit path (never `git add -A`):
-   `[KEY] Address review: <summary>` (KEY from the branch name or ticket folder), per `$AWF_KIT/templates/commit-message.md`. No `Co-Authored-By` or other trailers.
+   `<KEY>: Address review: <summary>` (KEY from the branch name or ticket folder), per `$AWF_KIT/templates/commit-message.md`. No `Co-Authored-By` or other trailers.
 4. Note the short SHA against the item.
 
 ## Step 4 — Verify
