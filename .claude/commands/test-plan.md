@@ -7,6 +7,8 @@ effort: medium
 
 # Test plan (stakeholder version)
 
+**Investigation tickets:** if `ticket.md` says `Kind: investigation`, stop and say this command is for delivery tickets. Point to `/investigate` instead, or to `/investigate convert` if the work should now be done in this ticket.
+
 Run this from the **ticket folder root**. Arguments: `$ARGUMENTS`.
 - **Mode:** `draft` (default) or `evidence`.
 - **Format:** `markdown` (default; works in GitHub, GitLab, Linear, Azure DevOps and most trackers), `jira` (Jira wiki markup, for Jira instances that don't render Markdown in comments), or `html`. The content is the same; only the markup changes.

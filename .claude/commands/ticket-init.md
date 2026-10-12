@@ -29,6 +29,7 @@ Write `ticket.md` from `$AWF_KIT/templates/ticket.md`. Replace the placeholders,
 - Number the acceptance criteria **AC1, AC2…** in the ticket's order. If the ticket's ACs aren't clearly separated, split them sensibly and tell me how you numbered them, since these IDs are used everywhere after this.
 - Branch name: `<KEY>-<short-description>`, lowercase with hyphens. Derive the description from the ticket title if I didn't give one.
 - Mode: `$AWF_BRANCH_MODE` (default `branch`).
+- **Kind:** `delivery` (code changes and PRs) or `investigation` (findings and documents, no code). Propose it from the ticket's type and wording ("spike", "investigate", "find out", "assess", "root cause", "evaluate"), and **ask me to confirm**. For an investigation, fill in **Questions to answer** (IQ1, IQ2…), **Expected outputs** and **Timebox** in place of acceptance criteria. Number any ACs the ticket also has, as usual.
 
 ## Step 3 — Candidate repos
 
@@ -44,4 +45,4 @@ Write `ticket.md` from `$AWF_KIT/templates/ticket.md`. Replace the placeholders,
 ## Step 4 — Hand over
 
 Tell me in a few lines: the folder path, the number of ACs, the candidate repos, and the next step:
-`cd <ticket folder> && claude`, then `/analyze-ticket`.
+`cd <ticket folder> && claude`, then `/analyze-ticket`. For an investigation, `/analyze-ticket` is optional; `/investigate` can start straight away.

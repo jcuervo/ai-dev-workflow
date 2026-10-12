@@ -15,6 +15,8 @@ If `analysis.md` already exists, stop and suggest `/update-analysis` instead. Do
 
 ## Step 1 — Read the ticket
 
+**If `Kind: investigation`:** analyse the *questions* instead of ACs. Check each IQ is answerable and scoped, and that the expected outputs and timebox are clear. In Step 5, roles are only `run` (needed for a local reproduction) or `reference` (read); there are no `change` repos. The next step is `/investigate`, not branches or a plan.
+
 Read `ticket.md`. For each AC, note anything ambiguous, untestable or missing (error states, permissions, edge cases, data).
 
 ## Step 2 — Explore the candidate repos in parallel

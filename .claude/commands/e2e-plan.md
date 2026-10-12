@@ -7,6 +7,8 @@ effort: high
 
 # Plan the e2e (Playwright) tests
 
+**Investigation tickets:** if `ticket.md` says `Kind: investigation`, stop and say this command is for delivery tickets. Point to `/investigate` instead, or to `/investigate convert` if the work should now be done in this ticket.
+
 Run this from the **ticket folder root**, after `plan.md` is approved. The Playwright repo should be checked out under `repos/` on the ticket branch.
 
 Coverage notes from me: `$ARGUMENTS`

@@ -2,6 +2,9 @@
 
 What changed in the kit and why. Newest first.
 
+## 2026-10-12
+- **Investigation tickets:** `Kind: delivery | investigation` in `ticket.md` (set by `/ticket-init`, with questions IQ1…, expected outputs and timebox). New `/investigate` (plan, run, report, convert) with `templates/investigation.md` and `templates/findings-report.md`. `/ticket-repos setup` creates no ticket branches for investigations (only `run` repos prepared; spike branches local and approved, never pushed). `/plan-ticket`, `/e2e-plan`, `/build-task`, `/test-plan` and `/ticket-ship` stop on investigation tickets. `/analyze-ticket` and `/ticket-status` are investigation-aware. Docs updated.
+
 ## 2026-10-11
 - **E2E speed:** new `/e2e-audit` (read-only audit of an existing Playwright suite: timings, waste, overlap, prioritized plan) and `docs/e2e-speed.md`. `/e2e-plan` designs for speed (API or seed setup, reused login state, short independent tests, no duplicated coverage, tags); `/build-task` runs only the task's specs on one browser; `task-reviewer` flags slow e2e patterns.
 - **Commit format:** `PROJ-123: <summary>` (key, colon, space) instead of `[PROJ-123] <summary>`. The review gate recognises both. PR titles use the same `PROJ-123: <summary>` format.

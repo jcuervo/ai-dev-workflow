@@ -116,6 +116,7 @@ Step-by-step runbook: [`docs/execution-flow.md`](docs/execution-flow.md) · rule
 |---|---|---|---|---|
 | 0 | Repo setup (once per repo, run inside the repo) | `/repo-setup [repo] [--update]` | Checks the repo's existing `CLAUDE.md` / `AGENTS.md` against the actual code and adds only what's missing to your personal `CLAUDE.local.md`; drafts a `CLAUDE.md` if there's none. Saves the repo's spec and lint commands for the hooks | drafting |
 | 1 | Start (run from `~/work/tickets`) | `/ticket-init <KEY> [desc]` | Creates the ticket folder and `ticket.md` with numbered ACs, and suggests which repos are involved | in use |
+| 1b | Investigation tickets | `/investigate [plan \| run \| report \| convert]` | For spikes and root-cause tickets: no branches or code. Hypotheses tested with evidence, then a stakeholder findings report, recommendations and follow-up ticket drafts | drafting |
 | 2 | Analyse | `/analyze-ticket [notes]` | Explores the repos in parallel; writes `analysis.md`, `open-questions.md` and a paste-ready question list; confirms each repo's role | in use |
 | 3 | Clarify | `/update-analysis` | Applies the BA/PO's answers as a delta. Mid-build, proposes the resulting task and plan changes | in use |
 | 4 | Branches | `/ticket-repos [setup \| add \| status \| sync \| release]` | Creates the ticket branch in every repo being changed, puts repos that only need to run on their latest main, checks the local stack, syncs with main, and switches back when done | drafting |
@@ -146,6 +147,7 @@ After each task: `/clear`, then `/build-task next`.
 **Templates:**
 - Per repo: `repo-CLAUDE.md`
 - Per ticket: `ticket.md`, `open-questions.md`, `analysis.md`, `plan.md`, `tasks.md`, `e2e-plan.md`, `test-plan.md`
+- Investigation tickets: `investigation.md`, `findings-report.md`
 - Conventions: `commit-message.md`, `pr-description.md`
 
 Everything built and planned, with inputs, outputs and status: [`docs/commands-inventory.md`](docs/commands-inventory.md).

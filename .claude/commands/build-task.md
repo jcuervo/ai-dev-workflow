@@ -7,7 +7,9 @@ effort: high
 
 # Build one task
 
-Run this from the **ticket folder root** (e.g. `~/work/tickets/PROJ-123/`). It contains `ticket.md`, `plan.md`, `tasks.md`, and the repo worktrees under `repos/`.
+**Investigation tickets:** if `ticket.md` says `Kind: investigation`, stop and say this command is for delivery tickets. Point to `/investigate` instead, or to `/investigate convert` if the work should now be done in this ticket.
+
+Run this from the **ticket folder root** (e.g. `~/work/tickets/PROJ-123/`). It contains `ticket.md`, `plan.md`, `tasks.md`, and the repos under `repos/` (links to your clones, or worktrees in worktree mode).
 
 Argument: `$ARGUMENTS`. A task ID like `T3`, or `next` / empty for the next available task.
 

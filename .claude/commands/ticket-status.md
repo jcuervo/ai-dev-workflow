@@ -11,6 +11,8 @@ Run this from the **ticket folder root**. **Read-only:** change nothing, commit 
 
 Gather the following, then show it as one compact report.
 
+**`Kind: investigation`:** instead of sections 1, 2, 4 and 5, show: question status (IQ table from `investigation.md`), hypotheses tested and their results, findings so far with confidence levels, time used versus the timebox, any spike branches in the repos, and whether `findings-report.md` exists. Section 3 (repos) still applies.
+
 ## 1. Tasks
 From `tasks.md`: a table of ID, title, repo, status, review verdict (from `reviews/T#.md`, last `Verdict:` line) and commits. Then:
 - **Next available task:** the first `todo` whose dependencies are `done`

@@ -6,7 +6,7 @@ Each command and agent picks its own model and effort level in its frontmatter (
 
 | Tier | Model | Used for | Why |
 |---|---|---|---|
-| **Think** | `opus` | `/analyze-ticket`, `/plan-ticket`, the **`task-reviewer`** agent | Mistakes here are the expensive kind. A missed dependency or a wrong plan costs a whole ticket, and the reviewer is the quality gate for everything built |
+| **Think** | `opus` | `/analyze-ticket`, `/plan-ticket`, `/investigate`, the **`task-reviewer`** agent | Mistakes here are the expensive kind. A missed dependency or a wrong plan costs a whole ticket, and the reviewer is the quality gate for everything built |
 | **Do** | `sonnet` | `/build-task`, `/resolve-review`, `/e2e-plan`, `/repo-setup`, `/update-analysis`, `/ticket-repos`, `/ticket-ship`, `/pr-describe`, `/test-plan`, `/ticket-init`, and the **`repo-explorer`** agent | Strong at coding and following precise procedures, at a fraction of the cost. Most of a ticket's tokens are spent here |
 | **Look** | `haiku` | `/ticket-status` | Reads files and reports; no judgment needed |
 | — | `inherit` | `/review-task` | It only hands off to `task-reviewer`, which sets its own model |

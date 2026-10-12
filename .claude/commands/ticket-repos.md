@@ -25,6 +25,7 @@ For each repo, run `git -C <clone> status --short` and `git -C <clone> branch --
 Creates branches for every `change` and `e2e` repo, and prepares every `run` repo. Use it after `/analyze-ticket` has confirmed the list.
 
 1. Show the plan, one line per repo: role, what will happen, and its current branch. **Wait for approval.**
+   - **`Kind: investigation`:** create **no ticket branches**. Only prepare `run` repos (default branch, latest) so a local reproduction runs current code. Spike branches for experiments are created by `/investigate`, case by case. Usually you don't need `setup` at all for an investigation; say so.
 2. **`change` and `e2e` repos:**
    - **branch mode** (default):
      1. Pull the default branch: `git -C <clone> switch <default>`, then `git -C <clone> pull --ff-only` if there's a remote.

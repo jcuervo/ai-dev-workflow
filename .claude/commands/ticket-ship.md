@@ -7,6 +7,8 @@ effort: medium
 
 # Ship the ticket
 
+**Investigation tickets:** if `ticket.md` says `Kind: investigation`, stop and say this command is for delivery tickets. Point to `/investigate` instead, or to `/investigate convert` if the work should now be done in this ticket.
+
 Run this from the **ticket folder root**. Argument: `$ARGUMENTS`. `check` runs Step 1 only (the Definition of Done report) and stops.
 
 Nothing is pushed, created or marked ready without my approval.

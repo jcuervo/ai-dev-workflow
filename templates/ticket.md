@@ -2,6 +2,7 @@
 
 - **Jira:** {{link}}
 - **Type:** feature | bug | chore | spike
+- **Kind:** delivery | investigation   <!-- delivery = code changes and PRs; investigation = findings and documents, no code -->
 - **Reporter (BA/PO):** {{names}}
 - **Created:** {{date}}
 
@@ -16,6 +17,13 @@
 
 - **AC1:** {{...}}
 - **AC2:** {{...}}
+
+## Investigation (Kind: investigation only)
+<!-- Replace the acceptance criteria above with these for an investigation ticket. Remove this section for delivery tickets. -->
+- **Questions to answer:**
+  - **IQ1:** {{...}}
+- **Expected outputs:** {{findings report, recommendation, follow-up tickets, decision record…}}
+- **Timebox:** {{e.g. 2 days}}
 
 ## Affected repos
 <!-- Filled in by /ticket-repos. Roles:

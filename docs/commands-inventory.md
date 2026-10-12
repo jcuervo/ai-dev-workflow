@@ -20,6 +20,12 @@ Priority: **P1** build first (core loop) · **P2** next · **P3** later or nice-
 | `/analyze-ticket` | Explores candidate repos read-only, follows dependencies to other services, confirms repos and roles (`change`/`e2e`/`run`/`reference`). Full analysis against the Definition of Ready: scope, impacted repos, risks, assumptions, edge cases. Uses parallel explorer agents per repo. | `ticket.md`, repos | `analysis.md`, `open-questions.md` | P1 | in use |
 | `/update-analysis` | Apply BA/PO answers as a **delta**: update only affected sections and log the changes. Mid-build (plan approved), propose the task, contract and e2e delta for approval. | `open-questions.md` with answers | Updated `analysis.md`, change log entry | P1 | in use |
 
+### Investigation tickets
+
+| Command | Purpose | Inputs | Outputs | Priority | Status |
+|---|---|---|---|---|---|
+| `/investigate [plan\|run\|report\|convert]` | Investigation tickets (Kind: investigation): plan questions, hypotheses and method; investigate read-only with an evidence log (spike branch only if approved, never pushed); findings with confidence; recommendations; follow-up ticket drafts; sanitized stakeholder `findings-report.md`; `convert` to delivery. Delivery-only commands stop on investigation tickets. | `ticket.md`, repos (read-only) | `investigation.md`, `findings-report.md` | P1 | drafting |
+
 ### Phase 2 — Planning
 
 | Command | Purpose | Inputs | Outputs | Priority | Status |
@@ -97,6 +103,7 @@ Priority: **P1** build first (core loop) · **P2** next · **P3** later or nice-
 | `e2e-plan.md` (replaces the manual hand-over doc) | `/e2e-plan`, `/build-task` | P1 | in use |
 | `test-plan.md` (stakeholder test plan for the Jira comment) | `/test-plan` | P1 | drafting |
 | `commit-message.md`: `<KEY>: <imperative summary>`, optional why-body, no task number, no trailers | `/build-task`, `/resolve-review` | P1 | drafting |
+| `investigation.md` / `findings-report.md` (internal log and findings / stakeholder report) | `/investigate` | P1 | drafting |
 | `pr-description.md` (sections wrapped in `awf:` markers so `--refresh` can update them in place) | `/pr-describe` | P2 | drafting |
 | `repo-CLAUDE.md`: starter for service repos (stack, exact commands, conventions, integrations, gotchas) | `/repo-setup` | P2 | drafting |
 

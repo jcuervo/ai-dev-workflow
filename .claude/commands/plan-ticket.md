@@ -7,6 +7,8 @@ effort: high
 
 # Plan the ticket
 
+**Investigation tickets:** if `ticket.md` says `Kind: investigation`, stop and say this command is for delivery tickets. Point to `/investigate` instead, or to `/investigate convert` if the work should now be done in this ticket.
+
 Run this from the **ticket folder root**. Notes from me: `$ARGUMENTS`
 
 ## Step 1 — Check readiness

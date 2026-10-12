@@ -149,11 +149,26 @@ Your clones switch back to main. The ticket folder stays as the record.
 
 ---
 
+## Investigation tickets (spikes, root cause, assessments)
+
+No branches, no code, no PRs. The output is findings.
+
+```
+/ticket-init PROJ-456            # confirm Kind: investigation; questions IQ1…, timebox
+/analyze-ticket                  # optional: are the questions answerable and scoped?
+/investigate plan                # questions → hypotheses → method; approve
+/investigate run                 # evidence-based, logged; checks in when a question is answered or stuck
+/investigate report              # findings-report.md (stakeholder) + recommendations + follow-up ticket drafts
+```
+
+**You do:** post `findings-report.md` to the ticket, and create the follow-up tickets from the drafts. If the work should happen in this same ticket: `/investigate convert`, then the normal path from `/analyze-ticket`.
+
 ## Situations along the way
 
 | Situation | Run |
 |---|---|
 | "Where am I? What's next?" | `/ticket-status` |
+| The ticket is an investigation, not code | Skip branches and the build loop: `/investigate plan` → `run` → `report` (see above) |
 | The BA/PO changes scope mid-build | Add the answer to `open-questions.md`, then `/update-analysis`. It proposes the task changes |
 | Another repo turns out to be involved | `/ticket-repos add <repo> [role]` |
 | main has moved (multi-day ticket) | `/ticket-repos sync` |
@@ -179,4 +194,6 @@ ship      /ticket-ship
 review    /resolve-review PR   (per PR, per round)
 close     /ticket-repos release
 anytime   /ticket-status
+
+investigation:  /ticket-init → /investigate plan → run → report
 ```

@@ -24,6 +24,21 @@ The working procedure for taking one ticket through Claude Code across one or mo
 
 ---
 
+## Investigation tickets
+
+Some tickets ask for answers, not code: a spike, a root-cause analysis, an assessment. `ticket.md` records `Kind: investigation`, with **questions to answer** (IQ1…), expected outputs and a timebox in place of acceptance criteria.
+
+| Step | Delivery | Investigation |
+|---|---|---|
+| Start | `/ticket-init` | `/ticket-init` (confirm **Kind: investigation**) |
+| Analyse | `/analyze-ticket` | Optional: `/analyze-ticket` checks the questions are answerable and scoped |
+| Branches | `/ticket-repos setup` | **Skipped.** No ticket branches. Experiments only on a local `<KEY>-spike` branch, approved case by case, never pushed |
+| Work | `/plan-ticket` → `/build-task` loop | `/investigate plan` → `/investigate run`: hypotheses tested cheapest first, every step logged with evidence |
+| Output | PRs, test plan | `/investigate report`: `findings-report.md` (stakeholder, sanitized), recommendations, follow-up ticket drafts |
+| If the work should happen here | — | `/investigate convert` switches the ticket to `Kind: delivery` and continues the delivery path |
+
+Delivery-only commands (`/plan-ticket`, `/e2e-plan`, `/build-task`, `/test-plan`, `/ticket-ship`) stop on an investigation ticket and point to `/investigate`.
+
 ## Folder layout
 
 The ticket workspace lives **outside** this repo and outside the service repos, so ticket content is never committed anywhere it shouldn't be.
@@ -39,6 +54,8 @@ The ticket workspace lives **outside** this repo and outside the service repos, 
 ├── evidence/            # screenshots per test item: PROJ-123_TP-01.png…
 ├── tasks.md             # task list — source of truth during build
 ├── notes.md             # decisions, deviations, surprises (append-only)
+├── investigation.md     # investigation tickets only: questions, hypotheses, log, findings
+├── findings-report.md   # investigation tickets only: stakeholder report
 ├── reviews/             # mandatory per-task reviews: T1.md, T2.md… (verdict, findings, resolution)
 ├── retro.md             # metrics and learnings at close
 └── repos/               # links to your clones (branch mode) or worktrees (worktree mode)
